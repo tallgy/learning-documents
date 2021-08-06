@@ -693,8 +693,42 @@ person.prototype.xx -> xx
 
 #### 		1.基本原则
 
+```
+this指向由运行时决定
+函数是谁调用的，this就指向谁
+
+ff(); --> window.ff();
+```
+
+
+
 #### 		2.如何改变this指向
+
+```
+function print(a, b) {this[a].log; this[b].log}
+
+print('name', 'age') --> window.this
+
+call，第一个参数，要改变的this的指向的结果,后面参数为要传递的参数
+print.call(obj, 'name', 'age');  --> o.print('name');
+
+apply,第一个参数，为this的指向，第二个参数为一个参数的数组
+print.apply(o, ['name', 'age'])
+```
 
 
 
 ### 	5.new的实现
+
+call和apply还有隐含的意义
+
+```
+function p() {this.name = 1;}
+var o = {};
+p.call(o);
+
+说明了在执行代码的时候，动态的给o对象创建了一个name属性
+o.name --> 1
+通过这个想法来实现一个new的过程
+```
+
