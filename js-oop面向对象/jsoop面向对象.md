@@ -338,5 +338,363 @@ console.log(g());
 
 3.循环中的问题
 
+```
+for (var i=0; i<3; i++) {
+    var ele = document.getElementById(i);
+    ele.onclick =
+        (function (id) {
+            return function () {
+            	console.log(id);
+            }
+        })(i);
+}
+```
 
 
+
+## 4.类与对象
+
+### 	1.对象
+
+#### 		1.对象的种类
+
+```
+基本数据类型：undefined null number string Boolean
+对象类型
+```
+
+js内置的（number）
+
+宿主环境的（window）
+
+自己创建的
+
+
+
+#### 		2.对象的创建
+
+```
+var p = {
+name: 'cj',
+work: function () {
+console.log('working...');
+},
+// _下划线，是一个约定，作为不能直接使用
+_age: 18,
+get age() {
+return this._age;
+},
+set age(val) {
+this._age = val;
+},
+address: {
+home: 'aaaa',
+}
+};
+
+console.log(p.age);
+console.log(p._age);
+p.age = 30;
+console.log(p['age']);
+console.log(p["address"]['home']);
+```
+
+
+
+##### 			1.对象字面量形式
+
+属性
+
+```
+name: 'cj',
+```
+
+方法
+
+```
+get age() {
+return this._age;
+},
+```
+
+get set型属性
+
+```
+// _下划线，是一个约定，作为不能直接使用，作为一个私有变量
+_age: 18,
+get age() {
+return this._age;
+},
+set age(val) {
+this._age = val;
+}
+
+console.log(p.age);
+console.log(p._age);
+p.age = 30;
+```
+
+
+
+##### 			2.成员访问
+
+两种访问方法
+
+```
+p.age
+p['age']
+```
+
+没有的时候会返回undefined
+
+```
+p.aaaa
+```
+
+级联访问
+
+```
+p.address.home;
+p["address"]['home'];
+
+这样写比较好，避免了没有address报错问题
+var result = p && p.address && p.address.home;
+```
+
+
+
+##### 			3.object
+
+```
+object.defineProperty(p, 'yy', {
+value: 100, //设置yy的值
+writable:false	//设置yy不可写
+})
+如果不设置属性的话，全部设置默认为false
+object.defineProperty(p, 'yyx'，{value:20})
+
+
+object.defineProperties(p, {
+salary: {
+	get,set,writable(写),enuerable(枚举),configurable(配置),value
+	value: 100,
+	writable: false,
+},
+gender: {
+	value: 200,
+},
+height: {
+	get: function() {
+		return 130;
+	},
+	set: function(val) {
+		val.log
+	}
+}
+})
+```
+
+##### 			4.工厂创建对象
+
+```
+// 工厂函数创建对象
+function PersonFactory(pname, page) {
+return {
+name: pname,
+age: page,
+head: 1,
+};
+}
+var p1 = PersonFactory('cj', 22);
+var p2 = PersonFactory('david', 33);
+```
+
+
+
+#### 		3.对象的基本操作
+
+成员的遍历
+
+```
+Object.key(p).log
+for (xs in p) {xs.log}
+```
+
+检查对象是否有某个属性
+
+```
+'name' in p;
+要自己拥有，属于父类的也属于false
+p.hasOwnProperty('name')
+p.name
+```
+
+成员的删除
+
+​	有些属性是不能删除的
+
+
+
+#### 	4.成员特性
+
+```
+writable
+	是否可以改变值
+enuerable
+	是否可以枚举，for in，false就不会出现
+configurable
+	是否可以配置，比如把writable设置为true...
+	
+得到对象的属性特性描述
+Object.getOwnPrepertyDescriptor(p, 'address')
+```
+
+
+
+#### 	5.constructor
+
+构造器，把object当成一个类，o1是类创建出来的对象，可以理解为一个模具
+
+对象才有构造器
+
+```
+var o = {}
+var o1 = new Object();
+
+o.constructor.log
+o1.constructor.log
+
+o.constructor === o1.constructor
+```
+
+```
+Number.constructor --> function Function()
+
+function f() {}
+f.constructor --> function Function()
+
+Function.constructor --> function Function()
+```
+
+```
+var a = 1;
+a.constructor --> function Number()
+```
+
+```
+(最顶级的)Function -> Function
+Function -> Object/Number/Array
+Object -> {}/new object
+Number -> (var a = 1)/ new number(1)
+```
+
+
+
+#### 		6.类型检查
+
+```
+typeof(o)	[function/object]
+o.instanceof(Object) [true/false]
+```
+
+
+
+### 2.类的创建
+
+#### 	1.构造函数模式
+
+作为一个类创建一个对象
+
+```
+// 作为一个类
+function Person() {
+this.age = 30;
+var name = '1';
+}
+Person.prototype.head = 1;
+var p = new Person();
+console.log(p.age);     //30
+console.log(p.name);    //undefined
+```
+
+
+
+#### 	2.伪类模式
+
+
+
+### 3.原型初探
+
+#### prototype属性
+
+#### 神秘的\__proto__
+
+prototype原型
+
+只有函数才有prototype,属于函数的属性，指向了一个对象，
+
+```
+在类中，互不干扰的使用this，相同的使用原型
+```
+
+```
+p.constructor.prototype.head
+```
+
+
+
+通过构造器函数创建出来的对象和共有的东西（原型）有关系，但是和函数没有关系的
+
+```
+p.name --> cj
+p.constructor = {name: 300}
+p.name --> cj
+并且p.head还是存在,说明了对于p找不到head的时候，不是通过p.constructor.prototype.head来进行寻找
+
+Person.prototype.head = 3
+p.constructor.prototype.head = 3;
+p.head --> 3
+
+个人理解：p.constructor.prototype原本和p.__proto__指向的是一个对象，如果只是对里面的值进行修改不会引起地址的变化的话是相等的，如果是将一个对象进行了修改了，那么将会引起prototype的指向的地址的变化，此时p.__proto__和p.constructor.prototype就不是一个地址了，所以会出现上面的问题
+```
+
+```
+用构造器函数创建的对象跟构造器的原型对象有一个链接不是通过constructor.prototype建立的,而是每一个对象有一个隐藏的__proto__来指向了创建时的原型对象
+__proto__在谷歌和火狐可以访问，但是这个不是一个标准，在ie是没有的
+```
+
+```
+p.head -> 2
+Person.prototype.head = 3
+p.head -> 3
+```
+
+```
+这三个指向的原本是一个对象
+p.constructor.prototype
+Person.prototype
+p.__proto__
+```
+
+```
+Person.prototype = {xx: 'xx'};
+此时Person的prototype将会指向一个新的对象，但是原本的p.__proto__将不会改变，因为上面的操作是将Person的地址进行了修改，而p.__proto__的指向已经确定，对于已经创建的对象p没有影响，只是对于新创建的p2(new Person())会和Person.prototype影响
+```
+
+```
+原来p2中没有xx，原型中有xx，但是通过下面的方式设置的xx，不会修改为原型的，而是直接在p2中进行添加新的xx
+p2.xx = 'YY'
+person.prototype.xx -> xx
+```
+
+
+
+### 	4.this
+
+#### 		1.基本原则
+
+#### 		2.如何改变this指向
+
+
+
+### 	5.new的实现
