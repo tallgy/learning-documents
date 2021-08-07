@@ -241,6 +241,15 @@ function f1() {
     var c = 300;
 }
 f1();
+
+
+问题，下面这个a是放在了window里面，属于一个全局的，所以没有使用到闭包，就算在new函数里面的函数使用到了a也不会产生闭包
+var a = 100;
+function New() {
+    var b = 10;
+    console.log(a);
+}
+New();
 ```
 
 
@@ -798,5 +807,118 @@ b.__proto__ === Object.prototype	--> true
 
 ```
 对象p2，使用new关键字，加上__proto__对象，指向函数的原型对象，同时加上constructor指向函数，函数创建的时候有个prototype指向了原型对象
+```
+
+
+
+## 5.封装
+
+信息隐藏
+
+### 	1.命名空间
+
+```
+命名空间p
+var p = {}
+子对象c，也可以被称为一个命名空间
+p.c = {}
+```
+
+
+
+### 	2.成员
+
+#### 		1.静态
+
+```
+function Person(name) {
+    this.name = name;
+    var age = 123;	//这个不会出现在成员里面
+}
+这个属于静态成员
+Person.usetools = true;
+var p1 = new Person(1);
+```
+
+
+
+#### 		2.公有
+
+```
+对象字面量创建的方法
+```
+
+
+
+#### 		3.私有
+
+```
+下划线开头
+```
+
+
+
+```
+function Person(name) {
+    var age = 1;
+    私有函数
+    function pm() {
+    	console.log(this.name);
+    }
+    this.name = name;
+    this.test = function () {
+    	console.log('publick method');
+    	这里this.name为空，下面的调用方式，前面没有 . 说明了是window对象，所以
+    	pm();
+    	修改,修改this指针
+    	pm.call(this);
+    }
+}
+
+var p1 = new Person();
+p1.pm();	//访问不了
+p1.test()	--> 在pm处输出空，因为pm为一种window对象的调用
+window.name = 'g';
+p1.test() --> 在pm处输出为g
+```
+
+```
+使用对象工厂形式
+function Person(pname) {
+	function pm() {
+		self.name;
+	}
+	var self = {
+		name: pname;
+		test: function() {
+			pm();
+		}
+	};
+	return self;
+}
+
+var p2 = Person('cj');
+p2.test();
+```
+
+
+
+## 继承
+
+子可以用父，
+
+1.子把父的东西全部直接复制进来
+
+```
+复制方式
+
+```
+
+
+
+2.对父有个引用
+
+```
+
 ```
 
