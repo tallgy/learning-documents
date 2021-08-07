@@ -220,7 +220,7 @@ Wiki的解释
 ```
 
 ```
-在程序预处理阶段，先生成了f1的词法环境，在进行函数的预处理时，会查看是否需要父类函数的变量，如果需要就会提前把值写入scope中，（不同浏览器的做法不同，有的可能会直接把f1的le词法环境直接写入scope中）然后逐步进行执行，到了f1的子函数内部f2。
+在程序预处理阶段，先生成了f1的词法环境，在进行f2函数的预处理时，会查看是否需要父类函数的变量，如果需要就会提前把值写入scope中，（不同浏览器的做法不同，有的可能会直接把f1的le词法环境直接写入scope中）然后逐步进行执行，到了f1的子函数内部f2。
 
 
 （1.会将f1的词法环境全部保存入f2的闭包中）（2.会在f2预处理和执行（函数在需要被执行的时候才会进行预处理）所以发现子函数f2会使用父函数f1的变量，此时再把变量放入f2的scope的闭包中（这里理解应该是错误的）
@@ -730,5 +730,73 @@ p.call(o);
 说明了在执行代码的时候，动态的给o对象创建了一个name属性
 o.name --> 1
 通过这个想法来实现一个new的过程
+```
+
+```
+自定义一个new过程，实现，把对象的__proto__指向了要new的protorype
+并且进行了对象的赋值
+function Person(name, age) {
+    this.name = name;
+    this.age = age;
+}
+//f是个函数，f 是个构造器函数
+function N(f) {
+    return function () {
+        var o = {
+        	"__proto__": f.prototype
+        };
+        f.apply(o, arguments);
+        return o;
+    }
+}
+N(Person)('aa', 1);
+```
+
+```
+js的类
+使用constructor指向了被创建的对象(Person),再创建一个__proto__指向了Person的prototype
+```
+
+```
+如果这样写，在产生对f的闭包的同时，会产生对o的闭包，原本闭包只是捕获了f，现在也捕获了o
+function N(f) {
+    var o = {
+    	"__proto__": f.prototype
+    };
+    return function () {
+        f.apply(o, arguments);
+        return o;
+    }
+}
+N(Person)('aa', 1);
+```
+
+```
+自己的写法
+function A(f, args) {
+    var o = {
+    	'__proto__': f.prototype
+    };
+    f.apply(o, args);
+    return o;
+}
+A(Person, ['11', 2])
+```
+
+
+
+```
+var a = {
+	'__proto__': Person.prototype
+}
+我们可以发现，只要把一个对象的 __proto__ 属性赋值给了谁，那么他就是属于谁的对象。默认为一个object的原型
+var b = {}
+b.__proto__ === Object.prototype	--> true
+```
+
+
+
+```
+对象p2，使用new关键字，加上__proto__对象，指向函数的原型对象，同时加上constructor指向函数，函数创建的时候有个prototype指向了原型对象
 ```
 
