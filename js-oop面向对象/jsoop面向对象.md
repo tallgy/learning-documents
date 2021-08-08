@@ -1289,3 +1289,104 @@ var c = new C();
 c.run();
 ```
 
+
+
+## 8.项目实战:miniQuery
+
+jquery
+
+```
+$(function(){})
+利用的是
+DomContetnLoaded
+```
+
+jquery扩展静态方法（工具方法）
+
+```
+$.extend({
+	staticMethod: function() {
+		alert('sm');
+	}
+});
+
+$.staticMethod();
+```
+
+扩展实例方法
+
+```
+$.fn.extend({
+	instanceMethod: function() {
+		alert('im');
+	}
+});
+
+$('').instanceMethod();
+```
+
+对象数组
+
+```
+方式一
+var o = {};
+var arr = [3, 4, 5];
+for (let i=0; i<arr.length; i++) {
+	o[i] = arr[i];
+}
+o.length = arr.length;
+```
+
+```
+var o = {};
+var divs = document.getElentsBy..('');
+Array.prototype.push.apply(o, divs);
+```
+
+
+
+miniQuery基础
+
+```
+(function () {
+    // 暴露外部使用接口
+    let miniQuery = window.miniQuery = window.$ = function(selector) {
+
+        // 没有用new方法的话，返回的会和miniQuery.prototype相等
+        //里面的this就是miniQuery.prototype所以相等
+        // return miniQuery.fn.init(selector);
+
+        //加了new，miniQuery.prototype为返回值的__proto__
+        //里面init函数貌似return this可以不用要，因为new方法
+        // 已经再返回的时候传递了地址
+        return new miniQuery.fn.init(selector);
+    };
+    
+    // 处理原型对象，增加了init方法，用于进行初始化，并且通过new方法调用来返回指向位置
+    miniQuery.fn = miniQuery.prototype = {
+        init: function(selector) {
+            let elements = document.getElementsByTagName(selector);
+            Array.prototype.push.apply(this, elements);
+            return this;
+        },
+        miniQuery: '1.0.0',
+        length: 0,
+        size: function () {
+            return this.length;
+        }
+    };
+   
+    miniQuery.fn.init.prototype = miniQuery.fn;
+    
+    // 实现继承
+    miniQuery.extend = miniQuery.fn.extend = function() {};
+    
+    // 添加静态方法
+    miniQuery.extend({});
+    
+    // 添加实例方法
+    miniQuery.fn.extend({});
+
+})();
+```
+
