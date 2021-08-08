@@ -907,18 +907,123 @@ p2.test();
 
 子可以用父，
 
-1.子把父的东西全部直接复制进来
+### 	1.对象形式的继承
+
+#### 		1.子把父的东西全部直接复制
 
 ```
 复制方式
-
+var person = {
+    name: a,
+    add: {
+    	home: 'home'
+    }
+};
+var programer = {
+	la: 'js',
+};
 ```
 
-
-
-2.对父有个引用
-
+```
+浅拷贝，对于父对象里面还有对象和数组的引用的，将会只拷贝引用地址，而不会把值拷贝进来，子修改了，父也会被改
+function extend(p, c) {
+    var c = c || {};
+    for (let pKey in p) {
+        //浅拷贝
+        c[pKey] = p[pKey];
+    }
+}
+extend(person, programer);
 ```
 
 ```
+深拷贝，使用了递归，在判断结果为对象和数组的时候将会调用递归，通过判断p[prop]的constructor属于Array还是其他的来判读是不是为数组，来赋值[] || {}
+function extendDeeply(p, c) {
+    var c = c || {};
+    for (let prop in p) {
+        if (typeof (p[prop]) === 'object') {
+            c[prop] = (p[prop].constructor === Array) ? [] : {};
+            extendDeeply(p[prop], c[prop]);
+        } else {
+        	c[prop] = p[prop];
+        }
+    }
+}
+extendDeeply(person, programer);
+```
 
+```
+构造函数，通过new一个对象，然后进行call调用this
+function Parent() {
+    this.name = 'abc';
+    this.add = {
+    	home: 'home',
+    };
+}
+function Child() {
+    Parent.call(this);
+    this.la = 'js';
+}
+
+var c = new Child();
+var p = new Parent();
+```
+
+#### 		2.对父有个引用
+
+```
+原型链
+var p = {
+	name: 'cj'
+};
+function myCreate(p) {
+    var ins;
+
+    function F() {}
+    F.prototype = p;
+    ins = new F();
+
+    return ins;
+}
+var c = myCreate(p);
+
+// ems5,ie9，js自带的create方法
+Object.create()
+```
+
+![image-20210808111153418](jsoop面向对象.assets/image-20210808111153418.png)
+
+```
+var ff = new FF();
+ff.__proto__ === FF.prototype --> true
+ff.__proto__ === ff.constructor.prototype --> true
+```
+
+```
+ff.constructor 指向了 FF
+ff.__proto__ 指向了 FF.prototype的指向
+FF.prototype.constructor 指向了 FF
+FF.prototype的__proto__ 指向了 Object.prototype的指向
+
+对象的原型指向的是构造器的原型，
+而对象的构造器的原型指向的是Object或者上级
+对象的构造器的原型的构造器 指向的是 对象的构造器
+```
+
+![image-20210808112300231](jsoop面向对象.assets/image-20210808112300231.png)
+
+### 	
+
+### 2.常用属性
+
+
+
+### 	3.类形式的继承
+
+#### 		1.继承实现
+
+#### 		2.constructor的修正
+
+#### 		3.通用方法
+
+#### 		4.调用父类的构造函数
