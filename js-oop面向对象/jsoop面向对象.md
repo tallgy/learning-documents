@@ -903,7 +903,7 @@ p2.test();
 
 
 
-## 继承
+## 6.继承
 
 子可以用父，
 
@@ -989,6 +989,8 @@ var c = myCreate(p);
 
 // ems5,ie9，js自带的create方法
 Object.create()
+var c1 = Object.create(p);
+var c2 = Object.create(p, {age: 1});
 ```
 
 ![image-20210808111153418](jsoop面向对象.assets/image-20210808111153418.png)
@@ -1012,7 +1014,7 @@ FF.prototype的__proto__ 指向了 Object.prototype的指向
 
 ![image-20210808112300231](jsoop面向对象.assets/image-20210808112300231.png)
 
-### 	
+### 	![290701352241158](jsoop面向对象.assets/290701352241158.jpg)
 
 ### 2.常用属性
 
@@ -1022,8 +1024,268 @@ FF.prototype的__proto__ 指向了 Object.prototype的指向
 
 #### 		1.继承实现
 
-#### 		2.constructor的修正
+再谈instanceOf
 
-#### 		3.通用方法
+```
+左边对象，右边函数
+new Number(123) instanceof Number; -> true
+```
 
-#### 		4.调用父类的构造函数
+```
+var f = new F()
+f instanceof F;			--> true
+f instanceof Object;	--> true
+```
+
+```
+自定义的instanceof的实现
+function Instance(f, F) {
+    while (f.__proto__ != null) {
+        if (f.__proto__ == F.prototype) {
+        	return true;
+        }
+        f = f.__proto__;
+    }
+    return false;
+}
+
+
+function F() {};
+function B() {};
+var f = new F();
+Instance(f, F)		--> true
+Instance(f, Object)	--> true
+Instance(f, B)		--> false
+```
+
+
+
+继承的实现
+
+```
+function P() {}
+function C() {}
+
+1.把C的proto指向了P，这样子可以用父的，但是这是把子和父统一了，不行
+C.prototype = P.prototype
+
+2.这是把c的原型变成new p,好处，这样可以避免了父子交互调用，但是如果P的里面存在大量不共通的数据，this.name...会造成内存的浪费
+C.protorype = new P();
+
+3.创建一个过渡函数，F的原型和p的原型相等，new一个f，f的原型指向了p的原型，c的原型指向了f。  
+C.prototype -> f
+f.constructor == F
+f.__proto__ -> P.prototype
+
+function F() {}
+f.prototype = P.prototype;
+var f = new F();
+C.prototype = f;
+等价于
+C.prototype = Object.create(P.prototype);
+```
+
+```
+完善
+1.创建父函数，和父的原型
+function Person() {}
+Person.prototype.head = 1;
+Person.prototype.ear = function () {
+	console.log('eating...');
+}
+
+2.创建子函数
+function Programmer() {}
+
+3.连接子函数和父函数，这里在第二个修改了Programmer.prototype.constructor的指向，原本是指向为Person，现在改成了Programmer，这两个代码常常是一起的
+Programmer.prototype = Object.create(Person.prototype);
+Programmer.prototype.constructor = Programmer;
+
+4.然后再写Programmer的原型，因为如果把原型写在上面，那么就会造成被覆盖
+Programmer.prototype.la = 'js';
+Programmer.prototype.work = function () {
+	console.log('i am writing code in ' + this.la);;
+}
+```
+
+
+
+#### 		2.通用方法
+
+实现super,uber,base，constructor的修正
+
+```
+把上面那个继承进行了封装
+function createEX(C, P) {
+	下面这部分是实现了对constructor的修正的封装
+	function F() {}
+	F.prototype = P.prototype;
+	C.prototype = new F();
+	C.prototype.constructor = C;
+	
+	这个是实现了类似于java的super和base来调用父类的原型方法
+	C.super = C.base = P.prototype;
+}
+
+Programmer.prototype.work = function() {
+	('i am writing' + this.ls).log
+	Programmer.super.eat();
+}
+```
+
+调用父类的构造函数
+
+```
+进行了子函数调用父函数，通过apply将this指向改成了子函数
+function P(name, age) {
+	this.name = name;
+	this.age = age;
+}
+function C(name, age, title) {
+	P.apply(C, arguments);
+}
+```
+
+一些方法
+
+```
+本身是否拥有
+hasOwnProperty()
+
+f.name = 'x'
+f.hasOwnProperty('name') --> true
+F.prototype.age = 1;
+f.hasOwnProperety('age') --> false
+```
+
+```
+查看一个原型对象是否是一个对象的原型
+function F() {}
+var f = new F();
+
+查看原型对象（F.prototype）是不是属于对象（f）的原型
+F.prototype.isPrototypeOf(f); --> true
+```
+
+```
+得到f的原型对象的描述
+Object.getPrototypeOf(f);
+```
+
+
+
+## 	7.多态
+
+### 		1.方法重载
+
+​	arguments,运行时的重载，通过判断传入的参数的数量和类型进行判断 该执行什么方法
+
+```
+function demo(a, b) {
+	方法形参的个数
+	demo.length
+	实际参数的个数
+	arguments.length
+	第一个参数
+	arguments[0]
+}
+```
+
+```
+function setting() {
+    var ele = document.getElementById('js');
+    if (typeof (arguments[0]) === 'object') {
+        for (let p in arguments[0]) {
+        	ele.style[p] = arguments[0][p];
+    	}
+    } else {
+        ele.style.fontSize = arguments[0];
+        ele.style.backgroundColor = arguments[1];
+    }
+}
+
+setting(18, 'red');
+setting({
+    fontSize: 20,
+    backgroundColor: 'green'
+});
+```
+
+
+
+### 		2.方法重写
+
+每个调用者都有方法，通过更改调用者来调用方法
+
+```
+var o = {
+    run: function () { console.log('o is running...'); }
+};
+var p = { 
+	run: function () { console.log('p is running...'); }
+};
+function demo(o) { o.run(); }
+demo(o);
+demo(p);
+```
+
+​	调用父类的方法
+
+```
+1.
+function F() {}
+var f = new F();
+
+本身没有，调用父的
+F.prototype.run = function () { 'F log'.log }
+f.run();
+
+这里因为原型链的查找规则，自己本身带有，所以直接调用本身
+f.run = function() { 'f log'.log }
+f.run();
+
+内部调用了父的原型方法
+f.run = function() {
+	'f log'.log
+	F.prototype.run();
+}
+f.run()
+```
+
+```
+2.P()方法设置为this的指向，在C里面把P的方法设置为C的，然后再赋值给变量pRun，然后再重写this.run
+function P() {
+    this.run = function () {
+    	console.log('parent is running...');
+    }
+}
+function C() {
+    P.call(this);
+    var pRun = this.run;
+    this.run = function () {
+    	console.log('c is running...');
+    	pRun();
+    }
+}
+var c = new C();
+c.run();
+```
+
+```
+3.父将方法写入了原型，然后子继承了父的原型的同时，将父的原型对象地址赋值到了子的super里面。然后通过调用C.super来调用父的原型内部的方法。
+function P() {}
+P.prototype.run = function () {}
+
+function C() {}
+C.prototype = Object.create(P.prototype);
+C.prototype.constructor = C;
+C.super = P.prototype;
+
+C.prototype.run = function () {
+	C.super.run();
+}
+
+var c = new C();
+c.run();
+```
+
