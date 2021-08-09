@@ -2,11 +2,11 @@
 
 ## 1、js的解析与执行过程
 
-### 1、全局
+### 	1、全局
 
-#### 1、预处理阶段
+#### 		1、预处理阶段
 
-##### 1、创建词法环境 Lexical Environment
+##### 			1、创建词法环境 Lexical Environment
 
 全局的词法环境对象等价于window对象（顶级的Lexical Environment是window）
 
@@ -1293,7 +1293,7 @@ c.run();
 
 ## 8.项目实战:miniQuery
 
-jquery
+### 	1.jquery理解
 
 ```
 $(function(){})
@@ -1301,7 +1301,7 @@ $(function(){})
 DomContetnLoaded
 ```
 
-jquery扩展静态方法（工具方法）
+#### 		jquery扩展静态方法（工具方法）
 
 ```
 $.extend({
@@ -1313,7 +1313,7 @@ $.extend({
 $.staticMethod();
 ```
 
-扩展实例方法
+#### 		扩展实例方法
 
 ```
 $.fn.extend({
@@ -1325,7 +1325,7 @@ $.fn.extend({
 $('').instanceMethod();
 ```
 
-对象数组
+### 	2.对象数组
 
 ```
 方式一
@@ -1345,7 +1345,7 @@ Array.prototype.push.apply(o, divs);
 
 
 
-miniQuery基础
+### 	3.miniQuery基础
 
 ```
 (function () {
@@ -1388,5 +1388,139 @@ miniQuery基础
     miniQuery.fn.extend({});
 
 })();
+```
+
+#### 		1.解决冲突
+
+```
+在最开始把window对象里面用到的专有名词先赋值，然后如果调用了noConflict方法，就会把window对象的专有名词的指向改变，并返回自己的专有对象。
+noConflict: function () {
+    window.$ = _$;
+    window.miniQuery = _miniQuery;
+    return miniQuery;
+}
+```
+
+#### 		2.each方法回调函数
+
+```
+each: function (fn) {
+    for (let i=0; i<this.length; i++) {
+    	fn(i, this[i]);
+    }
+    //链式操作，把自己返回回去
+    return this;
+},
+```
+
+#### 		3.链式操作
+
+```
+在一个方法里面，return this,这样就会在返回值后使用方法，实现了 链式操作
+a = {
+	b: function() {
+		'a'.log
+		return this;
+	}
+}
+a.b().b().b();
+```
+
+#### 		4.整体代码
+
+```
+(function () {
+
+    let _$ = window.$;
+    let _miniQuery = window.miniQuery;
+    // 暴露外部使用接口
+    let miniQuery = window.miniQuery = window.$ = function(selector) {
+
+        // 没有用new方法的话，返回的会和miniQuery.prototype相等
+        //里面的this就是miniQuery.prototype所以相等
+        // return miniQuery.fn.init(selector);
+
+        //加了new，miniQuery.prototype为返回值的__proto__
+        //里面init函数貌似return this可以不用要，因为new方法
+        // 已经再返回的时候传递了地址
+        return new miniQuery.fn.init(selector);
+    };
+    // 处理原型对象
+    miniQuery.fn = miniQuery.prototype = {
+        init: function(selector) {
+            let elements = document.getElementsByTagName(selector);
+            Array.prototype.push.apply(this, elements);
+            return this;
+        },
+        miniQuery: '1.0.0',
+        length: 0,
+        size: function () {
+            return this.length;
+        }
+    };
+    miniQuery.fn.init.prototype = miniQuery.fn;
+    // 实现继承，只处理只有一个参数，就是插件的扩展
+    miniQuery.extend = miniQuery.fn.extend = function() {
+        var o = arguments[0];
+        for (let p in o) {
+            this[p] = o[p];
+        }
+    };
+    // 添加静态方法
+    miniQuery.extend({
+        //去除前后空格
+        trim: function (text) {
+            return (text || '').replace(/^\s+|\s+$/g, '');
+        },
+        //解决冲突
+        noConflict: function () {
+            window.$ = _$;
+            window.miniQuery = _miniQuery;
+            return miniQuery;
+        }
+    });
+    // 添加实例方法
+    miniQuery.fn.extend({
+        // get方法
+        get: function (num) {
+            return this[num];
+        },
+        // each方法
+        each: function (fn) {
+            for (let i=0; i<this.length; i++) {
+                fn(i, this[i]);
+            }
+            //链式操作，把自己返回回去
+            return this;
+        },
+        // css的实现
+        css: function () {
+            var l = arguments.length;
+            if (l == 1) {
+                return this[0].style[arguments[0]];
+            } else {
+                var name = arguments[0];
+                var value = arguments]1;
+                this.each(function (index, ele) {
+                    this[index].style[name] = value;
+                })
+            }
+            return this;
+        }
+    });
+
+})();
+```
+
+
+
+## 9.后续学习
+
+```
+Object Oriented JavaScript
+jQuery源代码
+Pro JavaScript Design Patterns
+高性能JavaScript
+js权威指南
 ```
 
