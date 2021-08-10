@@ -17,3 +17,18 @@ three.js 3d
 style里面的style='width='800px''代表的是画布整体占据的分辨率
 ```
 
+
+
+```
+function Rect() {
+    context.rect(50, 50, 300, 300);
+
+    context.fillStyle = 'aqua';
+    context.fill();
+
+    context.lineWidth = 20;
+    context.strokeStyle = 'salmon';
+    context.stroke();
+}
+```
+
