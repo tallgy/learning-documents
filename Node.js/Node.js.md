@@ -676,7 +676,178 @@ fs.readdir('D:/Movie/www', function (err, files) {
 })
 ```
 
+## 代码风格与渲染
 
+- [JavaScript Standard Style](https://standardjs.com/)
+- Airbnb JavaScript Style
+
+- 服务端渲染和客户端渲染的区别
+  + 客户端渲染不利于 SEO 搜索引擎优化
+  + 服务端渲染是可以被爬虫抓取到的，客户端异步渲染是很难被爬虫抓取到的
+  + 所以你会发现真正的网站既不是纯异步也不是纯服务端渲染出来的
+  + 而是两者结合来做的
+  + 例如京东的商品列表就采用的是服务端渲染，目的了为了 SEO 搜索引擎优化
+  + 而它的商品评论列表为了用户体验，而且也不需要 SEO 优化，所以采用是客户端渲染
+
+##### 客户端渲染
+
+```
+先进行页面请求
+然后对于里面的数据，还要进行Ajax请求，会出现多次请求
+
+服务端压力小
+但是响应块
+```
+
+<img src="Node.js.assets/image-20210813104803640.png" alt="image-20210813104803640" style="zoom:50%;" />
+
+##### 服务器端渲染
+
+```
+就只进行一次请求，在请求的时候服务器端会先把数据渲染入页面，然后把页面发给前端
+
+服务器端压力变大
+不需要客户端进行处理
+```
+
+<img src="Node.js.assets/image-20210813104946982.png" alt="image-20210813104946982" style="zoom:50%;" />
+
+##### 如何查看是不是服务端渲染出来的
+
+```
+网页查看源代码，存在的是服务端渲染出来的，不存在的是客户端渲染出来的
+```
+
+## 案例
+
+### npm安装
+
+```
+//    npm install art-template
+//    该命令在哪执行就会把包下载到哪里。默认会下载到 node_modules 目录中
+//    node_modules 不要改，也不支持改。
+```
+
+### art-template模板引擎
+
+```
+注意：在浏览器中需要引用 lib/template-web.js 文件
+
+强调：模板引擎不关心你的字符串内容，只关心自己能认识的模板标记语法，例如 {{}}
+{{}} 语法被称之为 mustache 语法，八字胡啊。
+```
+
+```
+<script src="node_modules/art-template/lib/template-web.js"></script>
+```
+
+```
+<script type="text/template" id="tpl">
+    <p>大家好，我叫：{{ name }}</p>
+    <p>我今年 {{ age }} 岁了</p>
+    <h1>我来自 {{ province }}</h1>
+    <p>我喜欢：{{each hobbies}} {{ $value }} {{/each}}</p>
+</script>
+```
+
+```
+<script>
+var ret = template('tpl', {
+    name: 'Jack',
+    age: 18,
+    province: '北京市',
+    hobbies: [
+        '写代码',
+        '唱歌',
+        '打游戏'
+    ]
+})
+
+console.log(ret)
+</script>
+```
+
+```
+输出：
+    <p>大家好，我叫：Jack</p>
+    <p>我今年 18 岁了</p>
+    <h1>我来自 北京市</h1>
+    <p>我喜欢： 写代码  唱歌  打游戏 </p>
+```
+
+### 使用模板引擎实现apache目录
+
+```
+var http = require('http')
+var fs = require('fs')
+var template = require('art-template')
+
+var server = http.createServer()
+
+var wwwDir = 'D:/Movie/www'
+
+server.on('request', function (req, res) {
+  var url = req.url
+  fs.readFile('./template-apache.html', function (err, data) {
+    if (err) {
+      return res.end('404 Not Found.')
+    }
+    // 1. 如何得到 wwwDir 目录列表中的文件名和目录名
+    //    fs.readdir
+    // 2. 如何将得到的文件名和目录名替换到 template.html 中
+    //    2.1 在 template.html 中需要替换的位置预留一个特殊的标记（就像以前使用模板引擎的标记一样）
+    //    2.2 根据 files 生成需要的 HTML 内容
+    // 只要你做了这两件事儿，那这个问题就解决了
+    fs.readdir(wwwDir, function (err, files) {
+      if (err) {
+        return res.end('Can not find www dir.')
+      }
+
+      // 这里只需要使用模板引擎解析替换 data 中的模板字符串就可以了
+      // 数据就是 files
+      // 然后去你的 template.html 文件中编写你的模板语法就可以了
+      var htmlStr = template.render(data.toString(), {
+        title: '哈哈',
+        files: files
+      })
+
+      // 3. 发送解析替换过后的响应数据
+      res.end(htmlStr)
+    })
+  })
+})
+server.listen(3000, function () {
+  console.log('running...')
+})
+```
+
+```
+<tbody id="tbody">
+    {{each files}}
+    <tr>
+        <td data-value="apple/"><a class="icon dir" href="/D:/Movie/www/apple/">{{$value}}/</a></td>
+        <td class="detailsColumn" data-value="0"></td>
+        <td class="detailsColumn" data-value="1509589967">2017/11/2 上午10:32:47</td>
+    </tr>
+    {{/each}}
+</tbody>
+```
+
+### 留言板
+
+```
+浏览器收到 html 响应内容之后，就要开始从上到下依次解析，
+当在解析的过程中，如果发现：
+	link,script,img,iframe,video,audio等带有src或者href（link）属性标签（具有外链的资源）的时候，浏览器会自动对这些资源发起新的请求。
+```
+
+```
+我们为了方便 的统一处理静态资源，所以把所有的静态资源都存在pubic目录下
+public/	css/img/js/lib
+
+如果请求以public开头，使用 url.indexOf('/public/')===0
+就readFile url 并 res.end(data);
+```
 
 
 
