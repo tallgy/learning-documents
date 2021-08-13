@@ -833,6 +833,25 @@ server.listen(3000, function () {
 </tbody>
 ```
 
+```
+template的服务端简单使用理解
+
+require 引包 template
+在要使用的服务端渲染的url里面
+data.toString()，就是用来template的模板的html代码，第一个为模板，第二个参数为数据对象
+var htmlStr = template.render(data.toString(), {
+	comments: comments
+})
+最后，再res.end()发出htmlStr数据字符串
+
+html模板代码的样子
+{{each comments}}
+<li class="list-group-item">{{ $value.name }}说：{{ $value.message }} <span class="pull-right">{{ $value.dateTime }}</span></li>
+{{/each}}
+```
+
+
+
 ### 留言板
 
 ```
@@ -849,9 +868,348 @@ public/	css/img/js/lib
 就readFile url 并 res.end(data);
 ```
 
+```
+在服务端中，文件的路径就不要去写相对路径了，因为这个时候所有的资源都是通过url标识来获取的
+http://127.0.0.1:3000 浏览器会在真正发生请求的时候自动拼上
+```
+
+### get提交
+
+```
+使用url模块把get请求里面的url和请求数据分隔开
+
+var url = require('url')
+
+var obj = url.parse('/pinglun?name=的撒的撒&message=的撒的撒的撒', true)
+
+console.log(obj)
+console.log(obj.query)
+```
+
+<img src="Node.js.assets/image-20210813155636994.png" alt="image-20210813155636994" style="zoom:50%;" />
+
+### 使用302进行重定向
+
+```
+// 如何通过服务器让客户端重定向？
+//    1. 状态码设置为 302 临时重定向
+//        statusCode
+//    2. 在响应头中通过 Location 告诉客户端往哪儿重定向
+//        setHeader
+// 如果客户端发现收到服务器的响应的状态码是 302 就会自动去响应头中找 Location ，然后对该地址发起新的请求
+// 		所以你就能看到客户端自动跳转了
+
+res.statusCode = 302
+res.setHeader('Location', '/')
+res.end()
+```
+
+REPL
+
+```
+read
+eval
+print
+loop
+
+终端输入node直接回车，在里面可以直接使用node的核心模块，
+	类似于浏览器的控制台，但事实基于node的
+```
+
+## 核心模块，npm，exppress
+
+```
+知识点
+	模块系统
+		核心模块
+		第三方模块
+		自己写的模块
+	npm
+	package.json
+	Express
+		第三方web开发框架
+		高度封装了 http 模块
+		更加专注于业务，而非底层细节
+	增删改查
+		使用文件保存数据
+```
+
+使用slice和call将伪数组化为数组
+
+```
+[].slice.call($('div'));
+```
+
+### 模块化
+
+#### CommonJs模块规范
+
+```
+文件作用域
+通信规则
+	加载 require
+	导出 exports
+```
+
+#### 加载 `require`
+
+```
+语法
+var x = require('modlue');
+
+两个作用：
+	执行被加载模块中的代码
+	得到被加载模块中的exports导出接口对象
+```
+
+#### 导出 `exports`
+
+```
+Node中是模块作用域，默认文件中所有的成员只在当前文件模块有效
+对于希望可以被其他模块访问的成员，我们就需要把这些公开的成员都挂在到exports接口对象中就可以了
+
+导出多个成员：
+	再对象中
+	exports.a = 12;
+	exports.c = function() {}
+	
+导出单个成员：
+	拿到的就是函数、字符串
+	module.exports = 'hello'
+	如果写了两个，会覆盖
+```
+
+```
+直接把一个方法返回，而不是使用对象
+// 这种方式不行。
+// exports = add
+
+// 如果一个模块需要直接导出某个成员，而非挂载的方式
+// 那这个时候必须使用下面这种方式
+module.exports = 'hello'
+
+
+var fooExports = require('./foo')
+fooExports.log
+```
+
+#### 导出原理解析
+
+```
+在Node中，每个模块内部都有一个自己的 module 对象
+该 module 对象中，有一个成员叫：exports 也是一个对象
+也就是说如果你需要对外导出成员，只需要把导出的成员挂载到 module.exports 中
+```
+
+```
+// 我们发现，每次导出接口成员的时候都通过 module.exports.xxx = xxx 的方式很麻烦，点儿的太多了
+// 所以，Node 为了简化你的操作，专门提供了一个变量：exports 等于 module.exports
+```
+
+```
+// 两者一致，那就说明，我可以使用任意一方来导出内部成员
+// console.log(exports === module.exports)
+```
+
+```
+// 当一个模块需要导出单个成员的时候
+// 直接给 exports 赋值是不管用的
+
+// exports.a = 123
+
+//这样写代表了把exports指向了新的对象，所以此时exports已经没用了，
+// exports = {}
+// exports.foo = 'bar'
+
+// module.exports.b = 456
+```
+
+```
+// 给 exports 赋值会断开和 module.exports 之间的引用
+// 同理，给 module.exports 重新赋值也会断开
+```
+
+```
+// // 但是这里又重新建立两者的引用关系
+// exports = module.exports
+```
+
+```
+// 默认在代码的最后有一句：
+// 一定要记住，最后 return 的是 module.exports
+// 不是 exports
+// 所以你给 exports 重新赋值不管用，
+// return module.exports
+```
+
+#### require加载规则
+
+```
+核心模块
+	模块名
+第三方模块
+	模块名
+用户自己写的
+	路径
+```
+
+##### 优先从缓存加载
+
+```
+此时，执行顺序
+main.js
+	加载a，然后log输出，
+	然后，a加载b，b里面又log输出
+	然后到了main.js的加载b
+	因为前面a已经加载了b，所以b不会被执行
+	所以log只输出两次
+	
+因为加载的目的为拿到模块里面的exports，在加载之后就会放在缓存，所以模块不会重新在执行一次
+
+// 优先从缓存加载
+// 由于 在 a 中已经加载过 b 了
+// 所以这里不会重复加载
+// 可以拿到其中的接口对象，但是不会重复执行里面的代码
+// 这样做的目的是为了避免重复加载，提高模块加载效率
+```
+
+```
+main.js
+
+require('./a')
+require('./b')
+```
+
+```
+a.js
+
+'a.js loading'.log
+require('./b')
+```
+
+```
+b.js
+
+'b.js loading'.log
+```
+
+##### 判断模块标识
+
+```
+核心模块，第三方模块，自己的模块
+
+
+// 路径形式的模块：
+//  ./ 当前目录，不可省略
+//  ../ 上一级目录，不可省略
+//  /xxx 几乎不用	
+//  d:/a/foo.js 几乎不用	
+//  首位的 / 在这里表示的是当前文件模块所属磁盘根路径	C盘
+//  .js 后缀名可以省略
+// require('./foo.js')
+```
+
+```
+// 核心模块的本质也是文件
+// 核心模块文件已经被编译到了二进制文件中了，我们只需要按照名字来加载就可以了
+// require('fs')
+// require('http')
+```
+
+```
+// 第三方模块
+// 凡是第三方模块都必须通过 npm 来下载
+// 使用的时候就可以通过 require('包名') 的方式来进行加载才可以使用
+// 不可能有任何一个第三方包和核心模块的名字是一样的
+// 既不是核心模块、也不是路径形式的模块
+//    先找到当前文件所处目录中的 node_modules 目录
+//    node_modules/art-template
+//    node_modules/art-template/package.json 文件
+//    node_modules/art-template/package.json 文件中的 main 属性
+//    main 属性中就记录了 art-template 的入口模块
+//    然后加载使用这个第三方包
+//    实际上最终加载的还是文件
+```
+
+```
+//    如果 package.json 文件不存在或者 main 指定的入口模块是也没有
+//    则 node 会自动找该目录下的 index.js
+//    也就是说 index.js 会作为一个默认备选项
+```
+
+```
+//    如果以上所有任何一个条件都不成立，则会进入上一级目录中的 node_modules 目录查找
+//    如果上一级还没有，则继续往上上一级查找
+//    。。。
+//    如果直到当前磁盘根目录还找不到，最后报错：
+//      can not find module xxx
+```
+
+<img src="Node.js.assets/image-20210813213351516.png" alt="image-20210813213351516" style="zoom:50%;" />
+
+```
+// 注意：我们一个项目有且只有一个 node_modules，放在项目根目录中，这样的话项目中所有的子目录中的代码都可以加载到第三方包
+// 不会出现有多个 node_modules
+// 模块查找机制
+//    优先从缓存加载
+//    核心模块
+//    路径形式的文件模块
+//    第三方模块
+//      node_modules/art-template/
+//      node_modules/art-template/package.json
+//      node_modules/art-template/package.json main
+//      index.js 备选项
+//      进入上一级目录找 node_modules
+//      按照这个规则依次往上找，直到磁盘根目录还找不到，最后报错：Can not find moudle xxx
+//    一个项目有且仅有一个 node_modules 而且是存放到项目的根目录
+```
+
+
+
+
+
+### 案例
+
+#### slice方法
+
+```
+function mySlice() {
+	var start = 0;
+	var end = this.length;
+	
+	if (arguments.length === 1) {
+		start = arguments[0];
+	} else if (arguments.length === 2) {
+		start = arguments[0];
+		end = arguments[1];
+	}
+	
+	var tmp = [];
+	for (let i=start; i<end; i++) {
+		tmp.push(this[i]);
+	}
+	
+	return tmp;
+}
+```
+
+
+
+
+
+
+
+
+
 
 
 ## 大案例
+
+
+
+
+
+
 
 
 
