@@ -1310,6 +1310,73 @@ app.listen(3000, function () {
 })
 ```
 
+#### 基本路由
+
+```
+路由表
+```
+
+<img src="Node.js.assets/image-20210814163250351.png" alt="image-20210814163250351" style="zoom:33%;" />
+
+get
+
+```
+app.get('/', function(req, res) {
+	res.send('hello');
+})
+```
+
+post
+
+```
+app.post('/', function(req, res) {
+	res.send('world');
+})
+```
+
+静态服务
+
+<img src="Node.js.assets/image-20210814163514426.png" alt="image-20210814163514426" style="zoom:50%;" />
+
+```
+// 当以 /public/ 开头的时候，去 ./public/ 目录中找找对应的资源
+// 这种方式更容易辨识，推荐这种方式
+// app.use('/public/', express.static('./public/'))
+```
+
+```
+// 当省略第一个参数的时候，则可以通过 省略 /public 的方式来访问
+// 这种方式的好处就是可以省略 /public/
+app.use(express.static('./public/'))
+```
+
+```
+// 必须是 /abc/ /puiblic目录中的资源具体路径
+// index.use('/abc/', express.static('./public/'))
+```
+
+
+
+
+
+### 使用工具`nodemon`服务自动重启
+
+```
+是一个基于Node.js 开发的第三方命令行工具，我们使用的时候需要独立安装
+
+npm install --global nodemon
+```
+
+使用方法
+
+```
+原来使用node 执行文件
+node app.js
+
+现在使用nodemon
+nodemon app.js
+```
+
 
 
 ## 案例
@@ -1396,9 +1463,15 @@ app.listen(3000, function () {
 })
 ```
 
+#### 文件和模块读取路径问题
 
+```
+如果在读取路径上使用的是 / 开头，就会从根目录进行寻找
+```
 
+<img src="Node.js.assets/image-20210814154605404.png" alt="image-20210814154605404" style="zoom:50%;" />
 
+<img src="Node.js.assets/image-20210814154624695.png" alt="image-20210814154624695" style="zoom:50%;" />
 
 
 
