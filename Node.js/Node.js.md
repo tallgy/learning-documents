@@ -3,7 +3,7 @@
 ## 	学习资源
 
 ```
-深入浅出Node.js
+深入浅出Node.js	也有博客
 Node.js权威指南
 JavaScript标准参考教程(alpha) : http://javascript.ruanyifeng.com/
 Node入门: http://www.nodebeginner.org/index-zh-cn.html
@@ -11,6 +11,9 @@ Node入门: http://www.nodebeginner.org/index-zh-cn.html
 中文文档(版本比较旧，凑合看) : http://www.nodeclass.com/api/node.html
 CNODE社区: http://cnodejs.org
 CNODE-新手入门: http://cnodejs.org/getstart
+
+npm网站
+npmjs.com
 ```
 
 
@@ -1164,11 +1167,152 @@ b.js
 //    一个项目有且仅有一个 node_modules 而且是存放到项目的根目录
 ```
 
+### package.json包描述文件
+
+```
+我们建议每个项目都要有一个package.json文件
+这个文件可以通过
+npm init自动初始化出来
+```
+
+<img src="Node.js.assets/image-20210814102006932.png" alt="image-20210814102006932" style="zoom:50%;" />
+
+```
+npm install --save art-template
+使用了 --save 
+所以在安装包以后也会自动把这个写在json文件里面
+
+package.json dependencies 选项保存第三方包依赖信息
+```
+
+<img src="Node.js.assets/image-20210814102106190.png" alt="image-20210814102106190" style="zoom:33%;" />
+
+```
+这个时候，可以通过
+npm install 
+直接把package.json里面引用到的包直接打包出来
+```
+
+### npm
+
+#### npm网站
+
+```
+npmjs.com
+```
+
+#### npm命令行工具
+
+```
+命令行工具，安装node就安装了npm
+npm有版本
+npm --version
+```
+
+```
+升级npm
+npm install --alobal npm
+```
+
+```
+npm init
+	npm init -y	跳过向导快速生成
+```
+
+```
+npm install / npm i
+	npm install package	
+	npm install package --save	/ npm i  -S package
+```
+
+```
+删除，但不删除依赖信息
+npm uninstall package /	npm un package
+删除并且删除依赖信息
+npm uninstall --save package
+```
+
+```
+帮助
+npm help
+查看具体命令的使用帮助
+npm 命令 help
+```
+
+```
+npm --global 
+表示安装到全局，而非当前目录
+```
+
+#### 使用npm的淘宝镜像
+
+```
+http://npm.taobao.org/
+```
+
+##### 使用cnpm
+
+```
+安装淘宝的cnpm
+npm install --global cnpm
+然后把npm替换成cnpm
+cnpm install jquery
+```
+
+##### 直接使用淘宝的url
+
+```
+npm install jquery --registry=https://registry.npm.taobao.org
+```
+
+```
+把配置加入文件中
+npm config set registry https://registry.npm.taobao.org
+查看npm配置信息
+npm config list
+
+以后所有的npm install 都会通过淘宝服务器下载
+```
+
+### Express
+
+```
+expressjs.com
+```
+
+```
+原生的http在某些方面表现不足以应对我们的开发需求，所以我们就需要使用框架来加快我们的开发效率,框架的目的就是提高效率，让我们的代码更高度统一。
+在Node中，有很多Web开发框架，我们这里以学习express 为主。
+```
+
+```
+npm install express
+```
+
+#### 简单案例
+
+```
+// 1. 引包
+var express = require('express')
+// 2. 创建你服务器应用程序
+//    也就是原来的 http.createServer
+var app = express()
+
+app.get('/about', function (req, res) {
+  // 在 Express 中可以直接 req.query 来获取查询字符串参数
+  console.log(req.query)
+  res.send('你好，我是 Express!')
+})
+
+// 相当于 server.listen
+app.listen(3000, function () {
+  console.log('app is running at port 3000.')
+})
+```
 
 
 
-
-### 案例
+## 案例
 
 #### slice方法
 
@@ -1191,6 +1335,65 @@ function mySlice() {
 	
 	return tmp;
 }
+```
+
+#### express的一些简单操作
+
+```
+// 0. 安装
+// 1. 引包
+var express = require('express')
+
+// 2. 创建你服务器应用程序
+//    也就是原来的 http.createServer
+var app = express()
+
+
+// 在 Express 中开放资源就是一个 API 的事儿
+// 公开指定目录
+// 只要这样做了，你就可以直接通过 /public/xx 的方式访问 public 目录中的所有资源了
+app.use('/public/', express.static('./public/'))
+app.use('/static/', express.static('./static/'))
+app.use('/node_modules/', express.static('./node_modules/'))
+
+// 模板引擎，在 Express 也是一个 API 的事儿
+
+// 得到路径
+// 一个一个的判断
+// 以前的代码很丑
+
+app.get('/about', function (req, res) {
+  // 在 Express 中可以直接 req.query 来获取查询字符串参数
+  console.log(req.query)
+  res.send('你好，我是 Express!')
+})
+
+app.get('/pinglun', function (req, res) {
+  // req.query
+  // 在 Express 中使用模板引擎有更好的方式：res.render('文件名， {模板对象})
+  // 可以自己尝试去看 art-template 官方文档：如何让 art-template 结合 Express 来使用
+})
+
+// 当服务器收到 get 请求 / 的时候，执行回调处理函数
+app.get('/', function (req, res) {
+  res.send(`
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+  </head>
+<body>
+  <h1>hello Express！你好</h1>
+</body>
+</html>
+`)
+})
+
+// 相当于 server.listen
+app.listen(3000, function () {
+  console.log('app is running at port 3000.')
+})
 ```
 
 
