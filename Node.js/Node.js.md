@@ -169,6 +169,12 @@ node 路径/xx.js
 ### 文件读写
 
 ```
+// readFile 的第二个参数是可选的，传入 utf8 就是告诉它把读取到的文件直接按照 utf8 编码转成我们能认识的字符
+// 除了这样来转换之外，也可以通过 data.toString() 的方式
+fs.readFile('/', 'utf-8', function(err, data) {})
+```
+
+```
 // 浏览器中的 JavaScript 是没有文件操作的能力的
 // 但是 Node 中的 JavaScript 具有文件操作的能力
 
@@ -679,7 +685,7 @@ fs.readdir('D:/Movie/www', function (err, files) {
 })
 ```
 
-## 代码风格与渲染
+### 代码风格与渲染
 
 - [JavaScript Standard Style](https://standardjs.com/)
 - Airbnb JavaScript Style
@@ -1355,7 +1361,106 @@ app.use(express.static('./public/'))
 // index.use('/abc/', express.static('./public/'))
 ```
 
+#### 在express中 配置art-template
 
+##### 安装
+
+```
+npm install --save art-template
+npm install --save express-art-template
+```
+
+##### 配置
+
+```
+// 配置使用 art-template 模板引擎
+// 第一个参数，表示，当渲染以 .html 结尾的文件的时候，使用 art-template 模板引擎
+// express-art-template 是专门用来在 Express 中把 art-template 整合到 Express 中
+// 虽然外面这里不需要加载 art-template 但是也必须安装
+// 原因就在于 express-art-template 依赖了 art-template
+app.engine('html', require('express-art-template'))
+```
+
+##### 使用
+
+```
+// Express 为 Response 相应对象提供了一个方法：render
+// render 方法默认是不可以使用，但是如果配置了模板引擎就可以使用了
+// res.render('html模板名', {模板数据})
+// 第一个参数不能写路径，默认会去项目中的 views 目录查找该模板文件
+// 也就是说 Express 有一个约定：开发人员把所有的视图文件都放到 views 目录中
+res.render('admin/index.html')
+
+app.get('/', function (req, res) {
+  res.render('index.html', {
+    comments: comments
+  })
+})
+```
+
+<img src="Node.js.assets/image-20210814200753845.png" alt="image-20210814200753845" style="zoom:60%;" />
+
+```
+// 如果想要修改默认的 views 目录，则可以
+第一个参数就是views，一个名称
+// app.set('views', render函数的默认路径)
+```
+
+#####  302重定向
+
+```
+以前
+res.statusCode = 302;
+res.setHeader('Location', '/');
+
+现在
+res.redirect('/');
+```
+
+##### 处理post请求
+
+```
+需要先使用插件  body-parser
+// 当以 POST 请求 /post 的时候，执行指定的处理函数
+// 这样的话我们就可以利用不同的请求方法让一个请求路径使用多次
+app.post('/post', function (req, res) {
+  // 1. 获取表单 POST 请求体数据
+  // 2. 处理
+  // 3. 发送响应
+
+  // req.query 只能拿 get 请求参数
+  // console.log(req.query)
+
+  var comment = req.body
+  comment.dateTime = '2017-11-5 10:58:51'
+  comments.unshift(comment)
+
+  // res.send
+  // res.redirect
+  // 这些方法 Express 会自动结束响应
+  res.redirect('/')
+  // res.statusCode = 302
+  // res.setHeader('Location', '/') 
+})
+```
+
+###### 获得post请求体的数据 body-parser
+
+在express中没有内置获取表单post请求体的API,这里我们需要使用第三方包
+
+```
+npm install --save body-parser
+```
+
+```
+var bodyParser = require('body-parser')
+
+// 配置 body-parser 中间件（插件，专门用来解析表单 POST 请求体）
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+// parse application/json
+app.use(bodyParser.json())
+```
 
 
 
