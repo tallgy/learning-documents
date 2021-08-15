@@ -1578,9 +1578,73 @@ app.listen(3000, function () {
 
 <img src="Node.js.assets/image-20210814154624695.png" alt="image-20210814154624695" style="zoom:50%;" />
 
+#### 路由封装
 
+##### 自己写
 
+```
+入口js
+/**
+ * index.js 入门模块
+ * 职责：
+ *   创建服务
+ *   做一些服务相关配置
+ *     模板引擎
+ *     body-parser 解析表单 post 请求体
+ *     提供静态资源服务
+ *   挂载路由
+ *   监听端口启动服务
+ */
 
+var express = require('express')
+var router = require('./router')
+var app = express()
+
+router(app)
+```
+
+```
+router.js
+/**
+ * router.js 路由模块
+ * 职责：
+ *   处理路由
+ *   根据不同的请求方法+请求路径设置具体的请求处理函数
+ * 模块职责要单一，不要乱写
+ * 我们划分模块的目的就是为了增强项目代码的可维护性
+ * 提升开发效率
+ */
+
+module.exports = function(app) {
+	app.get('/students', function(req, res) {
+		
+	})
+}
+```
+
+##### express提供的方式
+
+```
+app.js
+
+var express = require('express');
+var router = require('./router');
+var app = express();
+
+app.use(router);
+```
+
+```
+router.js
+
+var express = require('express');
+var router = express.Router();
+router.get('/s', function(req, res) {
+	
+})
+
+module.exports = router;
+```
 
 
 
