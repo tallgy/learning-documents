@@ -1721,6 +1721,39 @@ var ret = students.find(function (item) {
 })
 ```
 
+```
+// find 接收一个方法作为参数，方法内部返回一个条件
+// find 会遍历所有的元素，执行你给定的带有条件返回值的函数
+// 符合该条件的元素会作为 find 方法的返回值
+// 如果遍历结束还没有符合该条件的元素，则返回 undefined
+```
+
+```
+实现：
+
+Array.prototype.myFind = function (conditionFunc) {
+  for (let i = 0; i < this.length; i++) {
+    if (conditionFunc(this[i], i)) {
+      return this[i];
+    }
+  }
+}
+
+
+var users = [
+  {id: 1, name: '张三'},
+  {id: 2, name: '张三'},
+  {id: 3, name: '张三'},
+  {id: 4, name: '张三'}
+]
+var ret = users.myFind(function (item, index) {
+  return item.id === 2
+})
+console.log(ret)
+```
+
+
+
 #### 数组删除 splice
 
 ```
@@ -1774,6 +1807,87 @@ less --> 编译器 --> css
 
 node在8.5之后才支持 es6
 ```
+
+### package.json和package-lock.json
+
+```
+npm5 以前不会有 package-lock.json 文件
+当你安装包的时候都会生成或更新package-lock.json文件
+
+npm5以后的版本安装包不需要加 --save 参数，他会自动保存依赖
+同时当你安装包的时候，会自动创建或者更新package-lock.json 文件
+
+首先，使用npm下载的包，包里面可能还会有依赖，所以会进行包的dependencies的分析
+会造成安装时间很长，所以，package-lock.json 里面存放了所有的node_modules
+的包，以及版本和下载地址等，信息，所以，下次在使用npm install的时候，就可以直接使用package-lock.json 里面的进行下载，大大加快了下载的速度
+
+lock 可以用来锁定版本
+如果一个项目依赖的版本为 1.1.1，然后重新install之后会下载最新版本，
+所以我们希望可以锁定版本1.1.1，这个lock的文件就可以防止自动升级新版
+```
+
+<img src="Node.js.assets/image-20210816213801488.png" alt="image-20210816213801488" style="zoom:50%;" />
+
+### Express处理404
+
+```
+// Express 对于没有设定的请求路径，默认会返回 Cat not get xxx
+// 如果你想要定制这个 404
+// 需要通过中间件来配置
+// 咱们讲中间件的时候说一下如何处理
+
+// 只需要在自己的路由之后增加一个
+app.use(function (req, res) {
+  // 所有未处理的请求路径都会跑到这里
+  // 404
+})
+```
+
+
+
+## MongoDB
+
+### 关系型数据库和非关系型数据库
+
+```
+表就是关系
+表与表之间存在关系
+	所有的关系型数据库都需要通过sql语言来操作
+	所有的关系型数据库在操作之前都需要设计表结构
+	而且数据表还支持约束
+		唯一的
+		主键
+		默认值
+		非空
+	非关系型数据库非常的灵活
+	有的非关系型数据库就是 key-value 对儿
+	但是 MongoDB 是长的最像关系型数据库的非关系型数据库
+		数据库 -》 数据库
+		数据表 -》 集合（数组）
+		表记录 -》 文档对象
+	MongoDB 不需要设计表结构
+	也就是说你可以任意的往里面存数据，没有结构性这么一说
+```
+
+下载安装
+
+```
+安装community版本
+```
+
+```
+配置环境变量
+找到安装的位置，进入bin
+然后进入电脑的环境变量
+设置好了之后然后保存确定
+
+进入cmd
+输入 mongod --version
+```
+
+<img src="Node.js.assets/image-20210816223400549.png" alt="image-20210816223400549" style="zoom:50%;" />
+
+<img src="Node.js.assets/image-20210816223504321.png" alt="image-20210816223504321" style="zoom:33%;" />
 
 
 
