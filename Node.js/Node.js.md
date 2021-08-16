@@ -1486,7 +1486,7 @@ nodemon app.js
 
 ## 案例
 
-#### slice方法
+### slice方法
 
 ```
 function mySlice() {
@@ -1509,7 +1509,7 @@ function mySlice() {
 }
 ```
 
-#### express的一些简单操作
+### express的一些简单操作
 
 ```
 // 0. 安装
@@ -1568,7 +1568,7 @@ app.listen(3000, function () {
 })
 ```
 
-#### 文件和模块读取路径问题
+### 文件和模块读取路径问题
 
 ```
 如果在读取路径上使用的是 / 开头，就会从根目录进行寻找
@@ -1578,9 +1578,9 @@ app.listen(3000, function () {
 
 <img src="Node.js.assets/image-20210814154624695.png" alt="image-20210814154624695" style="zoom:50%;" />
 
-#### 路由封装
+### 路由封装
 
-##### 自己写
+#### 自己写
 
 ```
 入口js
@@ -1622,7 +1622,7 @@ module.exports = function(app) {
 }
 ```
 
-##### express提供的方式
+#### express提供的方式
 
 ```
 app.js
@@ -1644,6 +1644,135 @@ router.get('/s', function(req, res) {
 })
 
 module.exports = router;
+```
+
+### 封装异步
+
+```
+要获取异步操作的结果，要使用回调函数
+
+将回调函数放在了异步操作结果的最后，形成了方法在异步操作之后才执行的效果，解决了异步问题
+
+function fn(callback) {
+  // var callback = function (data) { console.log(data) }
+
+  setTimeout(function () {
+    var data = 'hello'
+    callback(data)
+  }, 1000)
+}
+
+// 如果需要获取一个函数中异步操作的结果，则必须通过回调函数来获取
+fn(function (data) {
+  console.log(data)
+})
+```
+
+#### 方法封装回调函数解决异步
+
+```
+router.js
+获取前端请求并处理路由
+
+router.get('/students', function (req, res) {
+	这里使用了回调函数
+  Student.find(function (err, students) {
+    if (err) {
+      return res.status(500).send('Server error.')
+    }
+    res.render('index.html', {
+      fruits: [
+        '苹果',
+        '香蕉',
+        '橘子'
+      ],
+      students: students
+    })
+  })
+})
+```
+
+```
+student.js
+读取文件，这里使用回调函数，因为readFile是异步操作，
+	如果在里面进行return会没有值返回出来	
+	回调函数的作用就是让文件读取结束之后再执行
+	
+exports.find = function (callback) {
+  fs.readFile(dbPath, 'utf8', function (err, data) {
+    if (err) {
+    	此时err不会空，在上面的判断会进入错误情况
+      return callback(err)
+    }
+    此时err为空，在判断会把值赋值过去
+    callback(null, JSON.parse(data).students)
+  })
+}
+```
+
+### 数组方法
+
+#### find， es6
+
+```
+return的是代表查询条件，返回满足条件的那条数据
+var ret = students.find(function (item) {
+  return item.id === parseInt(id)
+})
+```
+
+#### 数组删除 splice
+
+```
+数组，分割，第一个是位置，第二个是删几个，修改原数组
+arr.splice(id, 1);
+```
+
+#### 数组查询 findIndex，es6新增
+
+```
+// findIndex 方法专门用来根据条件查找元素的下标
+会返回要查询的id所存在的下标
+var deleteId = students.findIndex(function (item) {
+	return item.id === parseInt(id)
+})
+```
+
+### js setTimeout
+
+```
+此时虽然setTimeout为0，但是处理出来的结果还是 1，3,2
+因为这个是js处理的机制,涉及了js 单线程，事件循环
+
+1.log
+
+setTimeout(function() {
+	2.log
+}, 0)
+
+3.log
+```
+
+### Node环境的 js模块化支持
+
+```
+在Node这个环境中对 js 进行了特殊的模块化支持 CommonJS
+
+require
+exports
+
+无论是 CommonJS、AMD、CMD、UMD、EcmaScript 6 Modules官方规范，
+	都是为了解决 js 的模块化问题
+```
+
+### es6 -> es5
+
+```
+EcmaScript 6 --> 编译器 --> EcmaScript 5
+就像是
+less --> 编译器 --> css
+
+node在8.5之后才支持 es6
 ```
 
 
