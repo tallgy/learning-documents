@@ -1728,9 +1728,9 @@ var ret = students.find(function (item) {
 // 如果遍历结束还没有符合该条件的元素，则返回 undefined
 ```
 
-```
-实现：
+##### 实现
 
+```
 Array.prototype.myFind = function (conditionFunc) {
   for (let i = 0; i < this.length; i++) {
     if (conditionFunc(this[i], i)) {
@@ -1771,6 +1771,89 @@ var deleteId = students.findIndex(function (item) {
 })
 ```
 
+#### every
+
+```
+都满足，返回Boolean值，true
+
+var ages = [1, 2, 3];
+
+ages.every(function(age) {
+	return age >= 18;
+})
+```
+
+#### some
+
+```
+一个满足，返回true,参数是函数
+
+var ages = [1, 2, 19];
+ages.some(function(age) {
+	return age>18;
+})
+```
+
+#### foreach
+
+```
+循环并给每个元素执行回调函数
+
+var arr = [1, 2, 3, 4, 5];
+
+arr.forEach(function (item) {
+	if (item === 3) {
+		return;
+	}
+	item.log
+})
+```
+
+#### includes
+
+```
+是否包含指定的数据
+
+[1, 2, 3].includes(3)
+true
+```
+
+#### indexOf
+
+```
+查找第一次出现的下标
+
+var str = 'hello';
+str.indexOf('el');
+1
+```
+
+#### map
+
+```
+map() 方法返回一个新数组，数组中的元素为原始数组元素调用函数处理后的值。
+map() 方法按照原始数组元素顺序依次处理元素。
+注意： map() 不会对空数组进行检测。
+注意： map() 不会改变原始数组。
+
+var num = [4, 9, 16];
+num.map(Math.sqrt);
+```
+
+#### reduce
+
+```
+reduce() 方法接收一个函数作为累加器，数组中的每个值（从左到右）开始缩减，最终计算为一个值。
+reduce() 可以作为一个高阶函数，用于函数的 compose。
+注意: reduce() 对于空数组是不会执行回调函数的。
+
+[1, 2, 3].reduce(function(prev, curr) {
+	return prev + curr;
+})
+```
+
+
+
 ### js setTimeout
 
 ```
@@ -1794,7 +1877,7 @@ setTimeout(function() {
 require
 exports
 
-无论是 CommonJS、AMD、CMD、UMD、EcmaScript 6 Modules官方规范，
+无论是 Node(CommonJS)、AMD(require.js)、CMD(sea.js)、UMD、EcmaScript 6 Modules官方规范，
 	都是为了解决 js 的模块化问题
 ```
 
@@ -1888,6 +1971,451 @@ app.use(function (req, res) {
 <img src="Node.js.assets/image-20210816223400549.png" alt="image-20210816223400549" style="zoom:50%;" />
 
 <img src="Node.js.assets/image-20210816223504321.png" alt="image-20210816223504321" style="zoom:33%;" />
+
+### 启动或者关闭数据库
+
+#### 启动
+
+```
+mongodb默认使用执行mongod 命令所在盘的根目录的 /data/db 作为自己的数据存储目录
+所以在第一次执行该命令之前 先自己手动创建一个 /data/db
+```
+
+```
+修改默认存储目录
+mongod --dbpath=数据存储目录路径
+```
+
+#### 停止
+
+```
+控制台，CTRL+c 或者 直接关闭控制台
+```
+
+### 连接数据库
+
+#### 连接
+
+```
+该命令默认连接本机的服务
+mongo 
+```
+
+#### 退出
+
+```
+输入 推出链接
+exit
+```
+
+### 基本命令
+
+```
+show dbs
+	查看显示所有数据库
+use 数据库名称
+	切换到指定的数据库（如果没有，会新建）
+db	
+	查看当前操作的数据库
+
+插入数据
+	db.students.insertOne({"name": "Jack"})
+show collections
+	显示当前db的所有集合 
+db.students.find()
+	查询所有students集合所有的值
+```
+
+<img src="Node.js.assets/image-20210817134800365.png" alt="image-20210817134800365" style="zoom:50%;" />
+
+### Node中如何操作 MongoDB
+
+#### 官方mongodb包
+
+```
+GitHub
+	mongodb/node-mongodb-native
+```
+
+#### 第三方mongoose来操作MondoDB数据库
+
+```
+第三方包，对官方的包进行了封装
+mongoosejs.com
+```
+
+```
+npm i mongoose
+```
+
+##### 简单使用
+
+```
+var mongoose = require('mongoose');
+
+// 连接 MongoDB 数据库
+mongoose.connect('mongodb://localhost/test', { useMongoClient: true });
+
+mongoose.Promise = global.Promise;
+
+// 创建一个模型
+// 就是在设计数据库
+// MongoDB 是动态的，非常灵活，只需要在代码中设计你的数据库就可以了
+// mongoose 这个包就可以让你的设计编写过程变的非常的简单
+var Cat = mongoose.model('Cat', { name: String });
+
+for (var i = 0; i < 100; i++) {
+  // 实例化一个 Cat
+  var kitty = new Cat({ name: '喵喵' + i });
+
+  // 持久化保存 kitty 实例
+  kitty.save(function (err) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log('meow');
+    }
+  });
+}
+
+```
+
+##### 简单使用2
+
+```
+步骤：
+1.连接数据库
+2.设计文档结构
+3.将文档结构发布为模型
+4.当我们有了模型构造函数之后，就可以使用这个构造函数对 users 集合中的数据为所欲为了（增删改查）
+```
+
+```
+var mongoose = require('mongoose')
+
+var Schema = mongoose.Schema
+
+// 1. 连接数据库
+// 指定连接的数据库不需要存在，当你插入第一条数据之后就会自动被创建出来
+mongoose.connect('mongodb://localhost/itcast')
+
+// 2. 设计文档结构（表结构）
+// 字段名称就是表结构中的属性名称
+// 约束的目的是为了保证数据的完整性，不要有脏数据
+var userSchema = new Schema({
+  username: {
+    type: String,
+    required: true // 必须有
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String
+  }
+})
+
+// 3. 将文档结构发布为模型
+//    mongoose.model 方法就是用来将一个架构发布为 model
+//    第一个参数：传入一个大写名词单数字符串用来表示你的数据库名称
+//                 mongoose 会自动将大写名词的字符串生成 小写复数 的集合名称
+//                 例如这里的 User 最终会变为 users 集合名称
+//    第二个参数：架构 Schema
+//   
+//    返回值：模型构造函数
+var User = mongoose.model('User', userSchema)
+
+// 4. 当我们有了模型构造函数之后，就可以使用这个构造函数对 users 集合中的数据为所欲为了（增删改查）
+```
+
+###### 新增数据
+
+```
+// var admin = new User({
+//   username: 'zs',
+//   password: '123456',
+//   email: 'admin@admin.com'
+// })
+
+// admin.save(function (err, ret) {
+//   if (err) {
+//     console.log('保存失败')
+//   } else {
+//     console.log('保存成功')
+//     console.log(ret)	//ret,插入的数据
+//   }
+// })
+```
+
+##### 查询数据
+
+###### 查询所有
+
+```
+// User.find(function (err, ret) {
+//   if (err) {
+//     console.log('查询失败')
+//   } else {
+//     console.log(ret)
+//   }
+// })
+```
+
+###### 查询符合条件的，数据/一个
+
+```
+find返回的是数组，不管有几个
+// User.find({
+//   username: 'zs'
+// }, function (err, ret) {
+//   if (err) {
+//     console.log('查询失败')
+//   } else {
+//     console.log(ret)
+//   }
+// })
+
+findOne只返回一个，有多个就返回第一个
+// User.findOne({
+//   username: 'zs'
+// }, function (err, ret) {
+//   if (err) {
+//     console.log('查询失败')
+//   } else {
+//     console.log(ret)
+//   }
+// })
+```
+
+##### 删除数据
+
+```
+有多少个符合的就删除多少个
+// User.remove({
+//   username: 'zs'
+// }, function (err, ret) {
+//   if (err) {
+//     console.log('删除失败')
+//   } else {
+//     console.log('删除成功')
+//     console.log(ret)
+//   }
+// })
+```
+
+##### 更新数据
+
+```
+User.findByIdAndUpdate('5a001b23d219eb00c8581184', {
+  password: '123'
+}, function (err, ret) {
+  if (err) {
+    console.log('更新失败')
+  } else {
+    console.log('更新成功')
+  }
+})
+```
+
+## node连接mysql
+
+```
+npm i mysql
+```
+
+```
+var mysql = require('mysql');
+
+// 1. 创建连接
+var connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'root',
+  database: 'users' // 对不起，我一不小心把数据库名字和表名起成一样的，你知道就行
+});
+
+// 2. 连接数据库 打开冰箱门
+connection.connect();
+
+// 3. 执行数据操作 把大象放到冰箱
+查询
+connection.query('SELECT * FROM `users`', function (error, results, fields) {
+  if (error) throw error;
+  console.log('The solution is: ', results);
+});
+插入
+// connection.query('INSERT INTO users VALUES(NULL, "admin", "123456")', function (error, results, fields) {
+//   if (error) throw error;
+//   console.log('The solution is: ', results);
+// });
+
+// 4. 关闭连接 关闭冰箱门
+connection.end();
+
+```
+
+## Promise，异步编程
+
+### 回调地狱
+
+```
+callback hell
+异步里面又套了一个异步
+```
+
+<img src="Node.js.assets/image-20210817160742577.png" alt="image-20210817160742577" style="zoom:33%;" />
+
+```
+这里因为读取文件是一个异步操作，所以我们不能够保证每次输出文件的顺序相同
+fs.readFile('./data/a.txt', 'utf8', function (err, data) {
+  if (err) { throw err }
+  console.log(data)
+})
+fs.readFile('./data/b.txt', 'utf8', function (err, data) {
+  if (err) { throw err }
+  console.log(data)
+})
+```
+
+```
+为了，解决这个顺序问题，所以就在回调嵌套回调
+fs.readFile('./data/a.txt', 'utf8', function (err, data) {
+  if (err) { throw err }
+  console.log(data)
+  
+  fs.readFile('./data/b.txt', 'utf8', function (err, data) {
+      if (err) { throw err }
+      console.log(data)
+    })
+})
+```
+
+### 解决回调地狱嵌套
+
+es6中新增了api，`promise`
+
+解决回调嵌套问题
+
+Promise本身不是异步，但是内部往往都是封装一个异步
+
+<img src="Node.js.assets/image-20210817161916229.png" alt="image-20210817161916229" style="zoom:50%;" />
+
+```
+在ES6中新增了一个 api promise
+promise是一个构造函数
+
+创建promise容器
+1.给别人一个承诺 I promise you
+	Promise 容器一旦创建，就开始执行里面的代码
+var p1 = new Promise(function(resolve, reject) {
+	fs.readFile('./data/xx', 'utf8', function(err, data) {
+		if (err) {
+			失败了，承诺容器中的任务失败了
+			把容器的Pending章台变为Rejected
+			
+			调用reject就相当于调用了 then方法的第二个参数函数
+			reject(err);
+		} else {
+			承诺容器中的任务成功了
+			把容器的 Pending 状态修改为成功 Resolved
+			也就是说这里调用的 resolve方法实际上就是 then方法传递的哪个 function
+			resolve(data)
+		}
+	})
+})
+
+p1就是那个承诺
+当p1成功了，然后then做指定的操作
+then方法接收的function就是容器中的resolve函数
+p1
+	.then(function(data) {
+		data.log
+	}, function(err) {
+		('失败了', err).log
+	})
+```
+
+```
+使用上述的特点来解决嵌套问题
+p1
+  .then(function (data) {
+    console.log(data)
+    // 当 p1 读取成功的时候
+    // 当前函数中 return 的结果就可以在后面的 then 中 function 接收到
+    // 当你 return 123 后面就接收到 123
+    //      return 'hello' 后面就接收到 'hello'
+    //      没有 return 后面收到的就是 undefined
+    // 上面那些 return 的数据没什么卵用
+    // 真正有用的是：我们可以 return 一个 Promise 对象
+    // 当 return 一个 Promise 对象的时候，后续的 then 中的 方法的第一个参数会作为 p2 的 resolve
+    // 
+    return p2
+  }, function (err) {
+    console.log('读取文件失败了', err)
+  })
+  .then(function (data) {
+    console.log(data)
+    return p3
+  })
+  .then(function (data) {
+    console.log(data)
+    console.log('end')
+  })
+
+```
+
+### 进行promise API封装
+
+```
+var fs = require('fs')
+
+function pReadFile(filePath) {
+  return new Promise(function (resolve, reject) {
+    fs.readFile(filePath, 'utf8', function (err, data) {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(data)
+      }
+    })
+  })
+}
+
+pReadFile('./data/a.txt')
+  .then(function (data) {
+    console.log(data)
+    return pReadFile('./data/b.txt')
+  })
+  .then(function (data) {
+    console.log(data)
+    return pReadFile('./data/c.txt')
+  })
+  .then(function (data) {
+    console.log(data)
+  })
+
+```
+
+### jQuery Ajax的promise封装
+
+```
+// $.get('http://127.0.0.1:3000/users/4')
+//   .then(function (user) {
+//     data.user = user
+//     return $.get('http://127.0.0.1:3000/jobs')
+//   })
+//   .then(function (jobs) {
+//     data.jobs = jobs
+//     var htmlStr = template('tpl', data)
+//     document.querySelector('#user_form').innerHTML = htmlStr
+//   })
+
+```
+
+
+
+
 
 
 
