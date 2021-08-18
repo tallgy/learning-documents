@@ -1468,6 +1468,7 @@ app.use(bodyParser.json())
 
 ```
 是一个基于Node.js 开发的第三方命令行工具，我们使用的时候需要独立安装
+热启动，热部署
 
 npm install --global nodemon
 ```
@@ -2412,6 +2413,41 @@ pReadFile('./data/a.txt')
 //   })
 
 ```
+
+### 自己使用promise封装Ajax
+
+```
+function pGet(url, callback) {
+	return new Promise(function(resolve, reject) {
+		var oReq = new XMLHttpRequest();
+		oReq.onload = function() {
+			这里，既调用了callba，也调用了resolve方法
+			callback && callback(JSON.parse(oReq.responseText));
+			resolve(JSON.parse(oReq.responseText));
+		}
+		oReq.onerror = function(err) {
+			reject(err)
+		}
+	})
+}
+```
+
+```
+使用：
+
+pGet('url')
+	.then(function(data) {
+		data.log
+	})
+	
+pGet('url', function(data) {
+	data.log
+})
+```
+
+## path路径操作模块
+
+
 
 
 
