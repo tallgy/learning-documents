@@ -740,6 +740,11 @@ fs.readdir('D:/Movie/www', function (err, files) {
 ### art-template模板引擎
 
 ```
+Node第三方模板引擎有很多
+art-template, ejs, jade(pug), handlebars, numjucks
+```
+
+```
 注意：在浏览器中需要引用 lib/template-web.js 文件
 
 强调：模板引擎不关心你的字符串内容，只关心自己能认识的模板标记语法，例如 {{}}
@@ -783,6 +788,22 @@ console.log(ret)
     <h1>我来自 北京市</h1>
     <p>我喜欢： 写代码  唱歌  打游戏 </p>
 ```
+
+#### 子模板
+
+```
+可以通过这个方式引用一个模块
+{{ include './header.art' }}
+```
+
+#### 模板继承
+
+```
+继承模板 
+{{ extend './layout.html' }}
+```
+
+
 
 ### 使用模板引擎实现apache目录
 
@@ -1340,7 +1361,18 @@ app.post('/', function(req, res) {
 })
 ```
 
-静态服务
+#### 返回json
+
+```
+这个会自动把json转化为字符串，然后返回
+res.json({
+	success: true
+})
+```
+
+
+
+#### 静态服务
 
 <img src="Node.js.assets/image-20210814163514426.png" alt="image-20210814163514426" style="zoom:50%;" />
 
@@ -1407,6 +1439,10 @@ app.get('/', function (req, res) {
 ```
 
 #####  302重定向
+
+```
+服务端重定向，只对同步请求有效，异步请求没有效果
+```
 
 ```
 以前
@@ -2447,11 +2483,142 @@ pGet('url', function(data) {
 
 ## path路径操作模块
 
+### 获取路径的文件名
 
+```
+默认包含扩展名
+path.basename('c:/a/index.js')
+	index.js
+path.basename('c:/a/index.js', '.js')
+	index
+```
 
+### 获取路径的目录
 
+```
+path.dirname('c:/a/in.js')
+	c:/a
+```
 
+### 获取路径的扩展名
 
+```
+path.extname('c:/a/in.html')
+	.html
+```
+
+### 判断是不是绝对路径
+
+```
+path.isAbsolute('c:/a/b/in.html')
+	true
+```
+
+### parse方法，把路径转化为对象
+
+```
+path.parse('c:/a/in.html')
+	{root: 'c:/',		根路径
+	dir: 'c:/a',		目录
+	base: 'in.html',	包含后缀名的文件名
+	ext: '.html',		后缀名
+	name: 'in'}			不包含后缀名的文件名
+```
+
+### join方法拼接路径
+
+```
+path.join('c:/a/b', 'in.js');
+	c:/a/b/in.js
+	
+path.join('c:/a/b', 'in', 'd');
+	c:/a/b/in/d
+```
+
+## Node中的其他非模块成员
+
+在每个模块中，除了`require`、`exports` 等模块相关API之外，还有两个特殊的成员
+
+__dirname
+
+```
+可以用来获取当前文件模块所属目录的绝对路径
+```
+
+__filename
+
+```
+可以用来获取当前文件的绝对路径
+```
+
+```
+__dirname 和 __filename 不会受到文件执行命令所属路径所影响
+```
+
+<img src="Node.js.assets/image-20210818133242669.png" alt="image-20210818133242669" style="zoom:50%;" />
+
+### 路径问题
+
+文件运行时，代码获取的路径和启动位置相关，运用函数使其为改文件的路径
+
+```
+// ./a.txt 相对于执行 node 命令所处的终端路径
+就是说，文件操作路径中，相对路径设计的就是相对于执行 node 命令所处的路径
+fs.readFile('./a.txt')
+```
+
+```
+在文件操作中，使用相对路径不可靠，因为文件的操作路径为相对于执行node命令所处的路径
+所以为了解决这个问题，就把相对路径变为绝对路径就可以了
+```
+
+<img src="Node.js.assets/image-20210818133553458.png" alt="image-20210818133553458" style="zoom:33%;" />
+
+<img src="Node.js.assets/image-20210818133627840.png" alt="image-20210818133627840" style="zoom:50%;" />
+
+<img src="Node.js.assets/image-20210818133651180.png" alt="image-20210818133651180" style="zoom:50%;" />
+
+```
+可以看到，在foo里面执行，不会报错，
+但是在其他路径运行了这个文件的话，会报错，因为， ./ 是相对的自己的执行文件时的一个路径
+```
+
+## express session
+
+```
+session默认是内存存储，服务器一旦重启就会丢失，真正的生产环境会把session进行持久化存储
+```
+
+```
+// 在 Express 这个框架中，默认不支持 Session 和 Cookie
+// 但是我们可以使用第三方中间件：express-session 来解决
+// 1. npm install express-session
+// 2. 配置 (一定要在 app.use(router) 之前)
+// 3. 使用
+//    当把这个插件配置好之后，我们就可以通过 req.session 来发访问和设置 Session 成员了
+//    添加 Session 数据：req.session.foo = 'bar'
+//    访问 Session 数据：req.session.foo
+```
+
+```
+var session = require('express-session')
+
+app.use(session({
+  // 配置加密字符串，它会在原有加密基础之上和这个字符串拼起来去加密
+  // 目的是为了增加安全性，防止客户端恶意伪造
+  secret: 'itcast',
+  resave: false,
+  saveUninitialized: true // 无论你是否使用 Session ，我都默认直接给你分配一把钥匙
+}))
+```
+
+```
+添加session数据
+req.session.foo = 'bar';
+
+获取session数据
+req.session.foo
+```
 
 
 
