@@ -2620,6 +2620,107 @@ req.session.foo = 'bar';
 req.session.foo
 ```
 
+## 中间件
+
+### 中间件概念
+
+```
+这里进行封装，
+var http = require('http')
+var url = require('url')
+
+引入中间件
+var query = require('./middlewares/query')
+
+var server = http.createServer(function (req, res) {
+  // 解析表单 get 请求体
+  // 解析表单 post 请求体
+  // 解析 Cookie
+  // 处理 Session
+  // 使用模板引擎
+
+  // 解析请求地址中的 get 参数
+  // var urlObj = url.parse(req.url, true)
+  // req.query = urlObj.query
+  query(req, res)
+
+  if (req.url === 'xxx') {
+    // 处理
+    // query、body、cookies、session、render API 成员
+  } else if (url === 'xx') {
+    // 处理
+  }
+
+  // 上面的过程都是了为了在后面做具体业务操作处理的时候更方便
+})
+
+```
+
+```
+这里就是中间件的实现
+module.exports = function (req) {
+  req.query = {}
+}
+
+```
+
+### express-中间件
+
+#### 不关心请求路径的中间件
+
+```
+// 中间件：处理请求的，本质就是个函数
+
+// 在 Express 中，对中间件有几种分类
+
+// 当请求进来，会从第一个中间件开始进行匹配
+//    如果匹配，则进来
+//       如果请求进入中间件之后，没有调用 next 则代码会停在当前中间件
+//       如果调用了 next 则继续向后找到第一个匹配的中间件
+//    如果不匹配，则继续判断匹配下一个中间件
+//    
+// 不关心请求路径和请求方法的中间件
+// 也就是说任何请求都会进入这个中间件
+// 中间件本身是一个方法，该方法接收三个参数：
+//    Request 请求对象
+//    Response 响应对象
+//    next     下一个中间件
+// 当一个请求进入一个中间件之后，如果不调用 next 则会停留在当前中间件
+// 所以 next 是一个方法，用来调用下一个中间件的
+// 调用 next 方法也是要匹配的（不是调用紧挨着的那个）
+
+var express = require('express')
+
+var app = express()
+
+app.use(function (req, res, next) {
+  console.log('haha')
+  next()
+})
+```
+
+#### 关心请求路径的中间件
+
+```
+// // 以 /xxx 开头的路径中间件
+// app.use('/a', function (req, res, next) {
+//   console.log('a')
+//   next()
+// })
+
+localhost:3000/a/aaa
+	/aaa
+```
+
+#### 严格匹配请求方法和路径的中间件
+
+```
+// 除了以上中间件之外，还有一种最常用的
+// 严格匹配请求方法和请求路径的中间件
+// app.get
+// app.post
+```
+
 
 
 ## 大案例
