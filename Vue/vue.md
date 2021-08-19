@@ -193,6 +193,31 @@ function Person() { function a() {} }
 ## vue的生命周期
 
 ```
-诞生到消亡的过程
+诞生到消亡的过程 
 ```
+
+```
+
+```
+
+![lifecycle](vue.assets/lifecycle.png)
+
+![lifecycle9](vue.assets/lifecycle9-1629382878007.jpg)
+
+## vue插值操作
+
+Mustache语法，也就是双大括号
+
+```
+<h2>{{message}}</h2>
+<h2>{{message}},啧啧啧</h2>
+
+<!-- Mustache的语法不仅可以直接写变量，还可以写简单表达式 -->
+<h2>{{firstName + lastName}}</h2>
+<h2>{{firstName + " " + lastName}}</h2>
+<h2>{{firstName}} {{lastName}}</h2>
+<h2>{{count * 2}}</h2>
+```
+
+
 
