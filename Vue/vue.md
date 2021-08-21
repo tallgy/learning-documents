@@ -482,6 +482,53 @@ for (let i in books) { }
 for (let book of books) { }
 ```
 
+#### es6的高阶函数循环操作 
+
+##### filter
+
+```
+filter,回调函数，必须返回一个Boolean值
+返回为true，会自动将这次回调的n加入到新的数组中，
+let newNums = nums.filter(function(n) {
+	return n < 100;
+});
+```
+
+##### map
+
+```
+map,返回值会加入数组
+let newN = num.map(function(n) {
+	return n*2;
+})
+```
+
+##### reduce
+
+```
+对数组中所有的内容进行汇总
+let total = num.reduce(function(total, n) {
+	return total + n;
+})
+```
+
+##### 合并案例
+
+```
+num.filter(function(n) {
+	return n < 100;
+}).map(function(n) {
+	return n * 2;
+}).reduce(function(total, n) {
+	return total + n;
+})
+
+箭头函数
+num.filter(n => n<100).map(n => n*2).reduce((total, n) => total+n);
+```
+
+
+
 ### 计算属性的getter和setter
 
 ```
@@ -929,6 +976,408 @@ filters: {
 
 <img src="vue.assets/image-20210820205316999.png" alt="image-20210820205316999" style="zoom:25%;" />
 
+## v-model 双向绑定
+
+### 基本使用和原理
+
+绑定表单，text area也可以使用
+
+```
+当我们在输，入框输入内容时
+因为input中的v-model绑定了message ,所以会实时将输入的内容传递给message , message发生改变。
+当message发生改变时,因为上面我们使用Mustache语法,将message的值插入到DOM中,所以DOM会发生响应的改变。
+所以,通过v-model实现了双向的绑定。
+```
+
+```
+原理
+两个指令的结合,表单，value绑定message，@监听input输入事件
+:value="message" @input="message = $event.target.value"
+
+<input type="text" :value="message" @input="message = $event.target.value">
+```
+
+### 结合radio
+
+```
+<!-- name属性radio互斥 使用v-model可以不用name就可以互斥 -->
+<label for="male">
+    <input type="radio" id="male" name="sex" value="男" v-model="sex">男
+</label>
+<label for="female">
+    <input type="radio" id="female" name="sex" value="女" v-model="sex">女
+</label>
+<div>你选择的性别是：{{sex}}</div>
+	男，女
+```
+
+### 结合checkbox
+
+#### 单选框
+
+```
+<!-- checkbox单选框 -->
+<h2>单选框</h2>
+<label for="agree">
+    <input type="checkbox" id="agree" v-model="isAgree">同意协议
+</label>
+<div>你选择的结果是：{{isAgree}}</div>
+	true，false
+<button :disabled="!isAgree">下一步</button>
+```
+
+<img src="vue.assets/image-20210821153258795.png" alt="image-20210821153258795" style="zoom:33%;" />
+
+#### 多选框
+
+```
+<input type="checkbox" name="hobby" value="足球" v-model="hobbies">足球
+<input type="checkbox" name="hobby" value="羽毛球"  v-model="hobbies">羽毛球
+```
+
+<img src="vue.assets/image-20210821153228491.png" alt="image-20210821153228491" style="zoom: 33%;" />
+
+```
+注意：
+这里一个为true和false，另一个为value数组的原因是因为
+在vue的data v-model绑定的数组的类型有关
+
+isAgree:false,
+	这里为Boolean类型，所以就为true和false，使用数字也是一样的
+hobbies:["篮球"],
+	这里是数组，所以里面就是对应的value，如果使用数字和Boolean类型，那么就会一变全变
+```
+
+### select
+
+```
+和checkbox-样, select也分单选和多选两种情况。
+单选:只能选中一个值。
+	v-model绑定的是一个值。
+	当我们选中option中的一个时 ,会将它对应的value赋值到mySelect中
+多选:可以选中多个值。
+	v-model绑定的是一个数组。
+	当选中多个值时,就会将选中的option对应的value添加到数组mySelects中
+```
+
+#### 单选
+
+```
+<!-- select单选 -->
+<select name="fruit" v-model="fruit">
+    <option value="苹果">苹果</option>
+    <option value="香蕉">香蕉</option>
+    <option value="西瓜">西瓜</option>
+</select>
+<h2>你选择的水果是：{{fruit}}</h2>
+
+fruit:"苹果",
+```
+
+#### 多选
+
+```
+<!-- select多选 -->
+multiple 多选
+
+<select name="fruits" v-model="fruits" multiple>
+    <option value="苹果">苹果</option>
+    <option value="香蕉">香蕉</option>
+    <option value="西瓜">西瓜</option>
+</select>
+<h2>你选择的水果是：{{fruits}}</h2>
+
+fruits:[]
+```
+
+### 值绑定
+
+```
+简单来说就是使用v-bind动态给value绑定值
+
+<label :for="item" v-for="(item, index) in oriHobbies" :key="index">
+	<input type="checkbox" name="hobby" :value="item" :id="item" v-model="hobbies">{{item}}
+</label>
+```
+
+### v-model 修饰符
+
+```
+lazy修饰符:
+	默认情况下, v-model默认是在input事件中同步输入框的数据的。
+	也就是说,一旦有数据发生改变对应的data中的数据就会自动发生改变。
+	lazy修饰符可以让数据在失去焦点或者回车时才会更新:
+number修饰符:
+	默认情况下,在输入框中无论我们输入的是字母还是数字,都会被当做字符串类型进行处理。
+	但是如果我们希望处理的是数字类型,那么最好直接将内容当做数字处理。
+	number修饰符可以让在输入框中输入的内容自动转成数字类型: 
+trim修饰符:
+	如果输入的内容首尾有很多空格,通常我们希望将其去除
+	trim修饰符可以过滤内容左右两边的空格
+```
+
+#### lazy 懒惰 修饰符
+
+```
+<h3>lazy,默认情况是实时更新数据，加上lazy，从输入框失去焦点，按下enter都会更新数据</h3>
+<input type="text" v-model.lazy="message">
+```
+
+#### number
+
+```
+<h3>修饰符number,默认是string类型，使用.number赋值为number类型</h3>
+<input type="number" v-model.number="age">
+```
+
+#### trim
+
+```
+<h3>修饰符trim:去空格</h3>
+<input type="text" v-model.trim="name">
+```
+
+## 组件化
+
+```
+思想
+如果我们将一一个页面中所有的处理逻辑全部放在一起,处理起来就会变得非常复杂,而且不利于后续的管理以及扩展。
+但如果,我们讲一个页面拆分成一个个小的功能块 ,每个功能块完成属于自己这部分独立的功能,那么之后整个页面的管理和维护就变得非常容易了。
+```
+
+### 步骤
+
+```
+创建组件构造器
+注册组件
+使用组件
+```
+
+<img src="vue.assets/image-20210821160235105.png" alt="image-20210821160235105" style="zoom:50%;" />
+
+```
+创建组件
+const cpnConstructor = Vue.extend({
+	template: `
+		<div>
+			<h2>title</h2>
+		</div>`
+});
+注册组件
+Vue.component('cpn', cpnConstructor);
+使用组件
+<cpn></cpn>
+```
+
+```
+1.Vue.extend():
+    调用Vue.extend(创建的是一个组件构造器。
+    通常在创建组件构造器时,传入template代表我们自定义组件的模板。
+    该模板就是在使用到组件的地方,要显示的HTML代码。
+    事实上,这种写法在Vue2.x的文档中几乎已经看不到了,它会直接使用下面我们会讲到的语法糖,但是在很多资料还		是会提到这种方式,而且这种方式是学习后面方式的基础。
+2.Vue.component():
+    调用Vue.component(是将刚才的组件构造器注册为一个组件 ,并且给它起一个组件的标签名称。
+    所以需要传递两个参数: 1、注册组件的标签名2、组件构造器
+3.组件必须挂载在某个Vue实例下,否则它不会生效。
+    我们来看下面我使用了三次<my-cpn></my-cpn>
+    而第三次其实并没有生效:
+```
+
+### 全局组件和局部组件
+
+#### 全局
+
+```
+上述方式注册的组件就是全局组件
+意味着可以在多个Vue的实例下使用  app = new Vue({el:'#app'}) app2 = new Vue({el:'#app2'})
+    const cpnC = Vue.extend({
+        template: `
+            <div>
+                <h2>s</h2>
+            </div>
+        `
+    });
+    Vue.component('con', cpnC);
+```
+
+#### 局部组件
+
+```
+const cpnC = Vue.extend({
+	template: `
+		<div></div>
+	`
+})
+
+在一个vue实例里面注册组件 
+const app = new Vue({
+	el: '#app',
+	data: {
+		message: 'aaaa'
+	},
+	组件注册
+	components: {
+		组件使用时的标签名
+		cpn: cpnC
+	}
+})
+```
+
+### 父组件和子组件
+
+```
+子组件
+const cpn2 = Vue.extend({})
+
+父组件
+const cpn2 = Vue.extend({
+  template:`
+    <div>
+      <h2>标题2</h2>
+      <p>组件2</p>
+      <cpn1></cpn1>
+    </div>`,
+  components:{
+    cpn1:cpn1
+  }
+})
+
+这个也可以算成一个组件，一个顶级组件，root组件
+const app = new Vue({
+  el:"#app",
+  components:{//局部组件创建
+    cpn2:cpn2
+  }
+})
+```
+
+```
+注意:
+<div id="app">
+  <cpn2></cpn2>
+  这里，app里面没有注册，所以不能使用，虽然在cpn2里面注册了，但是不能这样直接使用
+  <cpn1></cpn1>
+</div>
+```
+
+```
+父子组件错误用法:以子标签的形式在Vue实例中使用
+	因为当子组件注册到父组件的components时, Vue会编译好父组件的模块
+	该模板的内容已经决定了父组件将要渲染的HTML (相当于父组件中已经有了子组件中的内容了)
+	<child-cpn> </child-cpn>是只能在父组件中被识别的。
+	类似这种用法，<child-cpn> </child-cpn>是会被浏览器忽略的。
+```
+
+### 注册组件语法糖
+
+```
+主要是省去了调用Vue.extend()的步骤,而是可以直接使用一个对象来代替。
+
+Vue.component('cpn1', {
+	template: `
+		<div></div>
+	`
+})
+
+const app = new Vue({
+  el:"#app",
+  components:{//局部组件创建
+    cpn2:{
+      template:`
+    <div>
+      <h2>局部组件语法糖</h2>
+      <p>局部组件语法糖</p>
+    </div>`
+    }
+  }
+})
+```
+
+### 模板抽离写法
+
+#### script标签
+
+使用script标签，type='text/x-template'
+
+```
+使用id来辨别
+<script type="text/x-template" id="cpn1">
+  <div>
+      <h2>组件模板的分离写法</h2>
+      <p>script标签注意类型是text/x-template</p>
+    </div>
+</script>
+
+注册全局组件
+Vue.component('cpn', {
+	template: '#cpn1'
+})
+
+//局部组件创建
+const app = new Vue({
+  components: { 
+    cpn1:{
+      template:'#cpn1'
+    },
+  }
+})
+```
+
+#### template标签
+
+```
+<template id="cpn2">
+  <div>
+    <h2>组件模板的分离写法</h2>
+    <p>template标签</p>
+  </div>
+</template>
+
+使用同上
+```
+
+### 组件使用数据
+
+```
+组件是一个单独功能模块的封装
+	这个模块有属于自己的html模板，也应该有属于自己的数据data
+组件中的数据是保存在那里呢，顶层的Vue实例中吗
+	组件不能直接访问Vue实例中的data
+```
+
+```
+组件对象也有一个data属性(也可以有methods等属性，下面我们有用到）
+只是这个data属性必须是一个函数
+而且这个函数返回一个对象,对象内部保存着数据
+```
+
+```
+这里data是一个函数的原因
+为了保证数据不会相互影响，如果不使用函数的话，那么就会出现修改了一个地方的数据，另一个地方也会被修改
+每一个组件都有一个自己的状态，所以需要是一个函数
+
+下面这样写的话，就会造成相互影响，因为是一个内存地址
+const obj = { counter: 0 }
+data() {
+	return obj;
+}
+```
+
+```
+cpn1:{
+  template:'<div>{{msg}}</div>',
+  data(){
+    return {
+      msg:"组件的数据存放必须要是一个函数"
+    };
+  }
+}
+```
+
+
+
+
+
 
 
 
@@ -936,3 +1385,4 @@ filters: {
 
 
 # end
+
