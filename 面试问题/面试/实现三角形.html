@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    /*
+    使用css方式，通过修改border
+    */
+    .triangle1 {
+      width: 0;
+      height: 0;
+
+      border: 30px solid transparent;
+      border-bottom-color: red;
+
+      /*border: 30px solid red;*/
+      /*border-top-color: transparent;*/
+      /*border-right-color: transparent;*/
+      /*border-left-color: transparent;*/
+    }
+  </style>
+</head>
+<body>
+
+<div class="triangle1"></div>
+
+<canvas id="c"></canvas>
+
+<script>
+  let canvas = document.getElementById('c');
+  let context = canvas.getContext('2d');
+
+  context.beginPath();
+  context.moveTo(10, 10);
+  context.lineTo(50, 10);
+  context.lineTo(30, 30);
+  context.fill();
+  context.closePath();
+
+</script>
+</body>
+</html>

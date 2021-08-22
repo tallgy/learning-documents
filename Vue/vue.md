@@ -1,3 +1,5 @@
+
+
 # Vue
 
 ```
@@ -409,7 +411,7 @@ diabled
 
 
 
-## 计算属性
+## 计算属性 components
 
 ```
 有缓存，效率高
@@ -1373,6 +1375,242 @@ cpn1:{
   }
 }
 ```
+
+## 组件之间的通信
+
+<img src="vue.assets/image-20210822152031092.png" alt="image-20210822152031092" style="zoom:33%;" />
+
+```
+有些数据确实需要从上层传递到下层：
+    比如在一个页面中,我们从服务器请求到了很多的数据。
+    其中一部分数据,并非是我们整个页面的大组件来展示的,而是需要下面的子组件进行展示。
+    这个时候,并不会让子组件再次发送一 个网络请求,而是直接让大组件(父组件)将数据传递给小组件(子组件)。
+   
+如何进行父子组件间的通信呢
+	通过props向子组件传递数据 （props -> properties属性）
+	通过事件向父组件发送消息
+```
+
+### props基本用法，父->子
+
+```
+在组件中,使用选项props来声明需要从父级接收到的数据。
+props传值的两种方式
+    方式一:字符串数组,数组中的字符串就是传递时的名称。
+    方式二:对象,对象可以设置传递时的类型,也可以设置默认值等。
+```
+
+```
+父组件调用子组件的时候，将参数使用v-bind和父子组件进行传值
+然后，子组件里面加上props里面写入子组件的参数
+子组件就可以直接使用这个参数了
+```
+
+```
+使用
+div id='app'
+	cpn :cmovies='movies'
+	
+
+模板
+template id='cpn'
+	div	{{cmovies}}
+	
+const cpn = {
+	template: '#cpn',
+	props: ['cmovies'],
+	data() {
+		return {};
+	},
+}
+
+const app = new Vue({
+	el: '#app',
+	data: {
+		movies: ['你好哈', 'qq']
+	},
+	components: {
+	
+	}
+})
+```
+
+<img src="vue.assets/image-20210822125216326.png" alt="image-20210822125216326" style="zoom:80%;" />
+
+### props数据验证
+
+```
+支持的数据类型：
+String	Number	Boolean	Array	Object	Date	Function	Symbol
+```
+
+<img src="vue.assets/image-20210822125443950.png" alt="image-20210822125443950" style="zoom:50%;" />
+
+<img src="vue.assets/image-20210822125659833.png" alt="image-20210822125659833" style="zoom:80%;" />
+
+类型是对象或者数组的默认值
+
+ <img src="vue.assets/image-20210822125835348.png" alt="image-20210822125835348" style="zoom:50%;" />
+
+### props的驼峰标识
+
+```
+在v-bind那里不支持驼峰，因为html的标签和属性不支持大小写，会全为小写，大写要使用-i
+cInfo  v-info
+
+在vue里面可以使用驼峰，应该是在vue里面有个编译，然后转换成render文件，所以没有问题，如果使用原生的进行编译就会出现问题
+```
+
+<img src="vue.assets/image-20210822143433684.png" alt="image-20210822143433684" style="zoom:67%;" />
+
+### 子传父（自定义事件）
+
+```
+什么时候需要自定义事件呢
+    当子组件需要向父组件传递数据时,就要用到自定义事件了。
+    我们之前学习的v-on不仅仅可以用于监听DOM事件,也可以用于组件间的自定义事件。
+   
+使用流程 ：
+	子组件，$emit()来触发事件
+	父组件，v-on来监听事件
+```
+
+```
+子组件
+使用 this.$emit方法
+
+<button v-for="(item, index) in categoties" :key="index" @click="btnClick(item)">{{item.name}}</button>
+
+btnClick(item) {
+	this.$emit('itemclick', item)
+}
+
+父组件
+<div id="app">
+    <!-- 不写参数默认传递btnClick的item --> 不会传递浏览器事件对象event
+    <cpn @itemclick="cpnClcik"></cpn>
+</div>
+
+cpnClcik(item) {
+    console.log('cpnClick'+item.name);
+}
+```
+
+<img src="vue.assets/image-20210822152130367.png" alt="image-20210822152130367" style="zoom:33%;" />
+
+### 父子组件通信修改值
+
+```
+首先，对于props，是不建议直接对值进行修改的，所以，这里是通过将值返回给data里面，然后，修改dnumber的操作
+```
+
+<img src="vue.assets/image-20210822160459599.png" alt="image-20210822160459599" style="zoom:50%;" />
+
+
+
+```
+一个使用组件通信和双向绑定
+```
+
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<!--父组件-->
+<div id="app">
+<!--  调用子组件，和一个监听子组件的方法，和传给自组件的值-->
+  <cpn @change-m="excFV" :msg="test"></cpn>
+  <div>
+    father:
+    <br>
+    {{test}}
+  </div>
+</div>
+
+<!--子组件-->
+<template id="cpn">
+<!--  template组件root只能一个-->
+  <div>
+<!--    input输入，将父组件传过来的值给了value,再用input监听，把value通过$emit传递给父组件-->
+    <input type="text" :value="msg" @input="comV($event.target.value)">
+    <div>
+      son: {{msg}}</div>
+  </div>
+</template>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+<script>
+
+  // 子组件
+  const cpn = {
+    template: '#cpn',
+    props: {
+      // 父组件传的值
+      msg: {
+        type: String,
+        default() {
+          return 'a';
+        }
+      }
+    },
+    // 调用input输入方法，将值返给父组件，通过父组件修改这个值 ，从而修改了子组件的值
+    methods: {
+      comV: function (msg) {
+        this.$emit('change-m', msg);
+      }
+    }
+  }
+
+  // 父组件
+  const app = new Vue({
+    el: '#app',
+    data: {
+      // 传给子组件的默认值
+      test: 'c'
+    },
+    // 子组件
+    components: {
+      cpn
+    },
+    // 子组件修改返给父组件，父组件调用方法进行修改
+    methods: {
+      excFV: function (msg) {
+        this.test = msg;
+      }
+    },
+
+  })
+</script>
+</html>
+```
+
+### 父子组件通信 watch实现
+
+```
+监听什么属性的改变，名字就是什么,参数有newValue和oldValue
+```
+
+<img src="vue.assets/image-20210822165606151.png" alt="image-20210822165606151" style="zoom:50%;" />
+
+```
+
+```
+
+
+
+## 组件需要一个确切的根。root
+
+```
+这里，如果，不加上div会报错
+```
+
+<img src="vue.assets/image-20210822150717435.png" alt="image-20210822150717435" style="zoom:33%;" />
 
 
 
