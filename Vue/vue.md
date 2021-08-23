@@ -1918,8 +1918,9 @@ let mA = (function () {
 })
 ```
 
+### CommontJS模块化写法
+
 ```
-CommontJS模块化写法
 导出
 module.exports = {
 
@@ -1932,11 +1933,65 @@ var fn = a.fn;
 var {flag, fn} = require('./aa');
 ```
 
+### es6模块化
 
+```
+设置type为 module， 代表了使用模块化思想，此时 aaa.js 文件里面命名的变量将不会被外部使用
+<script src="aaa.js" type="module"></script>
+```
 
+导出
 
+```
+导出不是代表结束，只是一般在最后导出，导出是可以重复导出的
+然后导出的名字要和导入时定义 的名字相同   
+example
+	import {name,flag,sum,say,Person} from './aaa.js'
+	这里 aaa里面导出了 name， flag， sum， say， Person，所以名字也要这样定义
 
+aaa.js
 
+导出方式一：
+export {
+  flag,sum,age
+}
+
+导出方式二：
+export var num = 100;
+export var h = 1.2;
+
+导出方式三：
+导出函数/类
+export function mu(nu1, nu2) {
+	return nu1 + nu2;
+}
+export class Per {
+	run() {
+		
+	}
+}
+
+const add = 1;
+default只能有一个，不允许存在多个
+export default add;
+default的导入
+import add from './add.js';
+```
+
+导入
+
+```
+变量，方法，类都是这样
+import {name,flag,sum,say,Person} from './aaa.js'
+
+导入 export default
+import add from './add.js';
+
+统一全部导入
+import * as aaa from './aaa.js'
+使用
+	aaa.flag
+```
 
 
 
