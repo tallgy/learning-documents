@@ -1,5 +1,3 @@
-
-
 # Vue
 
 ```
@@ -1594,15 +1592,182 @@ cpnClcik(item) {
 
 ```
 监听什么属性的改变，名字就是什么,参数有newValue和oldValue
+
+监听的改变有 类型和值的改变，所以就算给了新值，但是和原来的类型和值没有变化的话也不会被监听到。
 ```
 
 <img src="vue.assets/image-20210822165606151.png" alt="image-20210822165606151" style="zoom:50%;" />
 
 ```
-
+注意点：
+传过来的值，需要有定义为string，因为input输入框为string类型，如果没有把string定义加上，那么就会在计算时类型对应不上报错，但是这里我是把msg赋值给了sonMsg，却报了msg问题，这里错误原因如下
 ```
 
+<img src="vue.assets/image-20210823095441472.png" alt="image-20210823095441472" style="zoom:25%;" />
 
+```
+错误原因：
+	我们以msg为例，首先父组件把msg传递给了子组件，然后再给了sonMsg，这时候类型就应该是传递过来的类型number，
+	然后我们再input输入后，因为input输入框是一个string类型value，所以在输入之后，此时拿出来的newValue就变成了string，
+	然后我们通过计算给了兄弟元素，兄弟元素的变成了number，但是本身的还是string，
+	我们又通过事件传递给了父元素，父元素将这个值赋值给了msg，此时msg就从number变成了string了，
+	然后又因为绑定的原因，所以会把msg传递给了son，但是子元素只允许传递number，所以就报错了。
+```
+
+<img src="vue.assets/image-20210823094449658.png" alt="image-20210823094449658" style="zoom:33%;" />
+
+```
+代码
+
+
+<!--父组件-->
+<div id="app">
+  <!--  调用子组件，和一个监听子组件的方法，和传给自组件的值-->
+  <cpn @change-m="excFV" :msg="test" :info="a" @info-ex="infoEx"></cpn>
+  <div>
+    father:
+    <br>
+    {{test}}
+    <br>
+    a
+    {{a}}
+  </div>
+</div>
+
+<!--子组件-->
+<template id="cpn">
+  <!--  template组件root只能一个-->
+  <div>
+    <!--    input输入，将父组件传过来的值给了value,再用input监听，把value通过$emit传递给父组件-->
+    <input type="text" :value="sonMsg" @input="comV($event.target.value)">
+    <input type="text" v-model="sonMsg">
+    <div>
+      son: {{sonMsg}}
+    </div>
+
+    <input type="text" v-model="sonInfo">
+    <div>{{sonInfo}}</div>
+  </div>
+</template>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+<script>
+
+  // 子组件
+  const cpn = {
+    template: '#cpn',
+    props: {
+      // 父组件传的值
+      msg: {
+        type: [Number, String],
+        // type: Number,
+      },
+      info: {
+        type: [Number, String],
+        // type: Number,
+      }
+    },
+    data() {
+      return {
+        sonInfo: this.info,
+        sonMsg: this.msg,
+      };
+    },
+    created() {
+      console.log(typeof this.sonInfo);
+    },
+    // 调用input输入方法，将值返给父组件，通过父组件修改这个值 ，从而修改了子组件的值
+    methods: {
+      comV: function (msg) {
+        this.$emit('change-m', msg);
+      }
+    },
+    watch: {
+      sonInfo(newValue) {
+        this.sonMsg = newValue / 100;
+        this.$emit('info-ex', newValue);
+      },
+      sonMsg(newValue) {
+        console.log(typeof newValue);
+        this.sonInfo = newValue * 100;
+        console.log(newValue);
+        // this.$emit('change-m', newValue);
+      }
+    }
+  }
+
+  // 父组件
+  const app = new Vue({
+    el: '#app',
+    data: {
+      // 传给子组件的默认值
+      test: 2,
+      a: 3,
+    },
+    // 子组件
+    components: {
+      cpn
+    },
+    // 子组件修改返给父组件，父组件调用方法进行修改
+    methods: {
+      excFV: function (msg) {
+        this.test = msg;
+      },
+      infoEx: function (info) {
+        this.a = info;
+      },
+    },
+  });
+```
+
+### 父子组件的访问方式 $children && $parent
+
+```
+有时候我们需要父组件直接访问子组件，子组件直接访问父组件,或者是子组件访问跟组件。
+	父组件访问子组件:使用$children或$refs reference(引用)
+	子组件访问父组件:使用$parent
+```
+
+#### 父 访问子 $children || $refs reference
+
+```
+我们先来看下$children的访问
+	this.$children是一个数组类型,它包含所有子组件对象。
+	我们这里通过一个遍历,取出所有子组件的message状态。
+	真实开发里面一般不通过$children拿东西
+$ref
+	首先给子组件加上 ref并附上自己所定义的值，用于判断是要找哪个
+	然后父组件通过 this.$ref.xxx 获取到子组件
+```
+
+```
+父组件
+$children
+		返回的是一个数组， 这个是子组件里面的方法
+	this.$children[0].showMessage();
+						这个是子组件的一个变量
+	this.$children[0].name;
+
+$refs -> 对象类型，默认是个空的对象
+	子组件需要加上 <cpn ref="aaa"></cpn> 
+	获取方式
+		console.log(this.$refs.aaa.name)
+```
+
+<img src="vue.assets/image-20210823101313930.png" alt="image-20210823101313930" style="zoom:25%;" />
+
+#### 子访问父 parent root
+
+```
+很少用，因为这样使用之后，就会导致子组件不够独立，复用性不强，会对父组件有依赖性
+```
+
+```
+使用方法如上
+	this.$parent 获取到父组件
+	this.$root 根组件，vue实例
+```
 
 ## 组件需要一个确切的根。root
 
@@ -1611,6 +1776,161 @@ cpnClcik(item) {
 ```
 
 <img src="vue.assets/image-20210822150717435.png" alt="image-20210822150717435" style="zoom:33%;" />
+
+## 插槽 slot
+
+### 基本使用和默认值
+
+```
+组件的插槽也是为了让我们封装的组件更加具有扩展性。
+让使用者可以决定组件内部的一些内容到底展示什么。
+```
+
+```
+里面什么都没有，使用默认，button
+<cpn></cpn>
+将slot进行替换，不要默认
+<cpn><span style="color:red;">这是插槽内容222</span></cpn>
+两个一起作为替换元素
+<cpn>
+	<span style="color:red;">这是插槽内容222</span>
+	<span style="color:red;">这是插槽内容222</span>
+</cpn>
+
+<template id="cpn">
+    <div>
+        <div>
+        	{{message}}
+        </div>
+        <slot>
+        	<!-- 插槽默认值 -->
+        	<button>button</button>
+        </slot>
+    </div>
+</template>
+```
+
+### 具名插槽
+
+```
+当子组件的功能复杂时,子组件的插槽可能并非是一个。
+    比如我们封装一个导航栏的子组件 ,可能就需要E个插槽,分别代表左边、中间、右边。
+    那么,外面在给插槽插入内容时,如何区分插入的是哪一个呢?
+    这个时候,我们就需要给插槽起一个名字
+
+如何使用
+	非常简单，只要给slot元素一 个name属性即可
+	<slot name= 'myslot'> </slot>
+```
+
+```
+会把所有没有具名的插槽替换掉
+<span>没具名</span>
+定义 slot ，查找对应name的插槽进行替换
+<span slot="left">这是左边具名插槽</span>
+
+
+<div>
+  <slot name="left">左边</slot>
+  <slot name="center">中间</slot>
+  <slot name="right">右边</slot>
+  <slot>没有具名的插槽</slot>
+</div>
+```
+
+### 作用域插槽
+
+#### 编译作用域
+
+```
+  <div id="app">
+	#app 的 isShow
+    <!-- 使用的vue实例作用域的isShow -->
+    <cpn v-show="isShow"></cpn>
+  </div>
+```
+
+#### 作用域插槽
+
+```
+简单的一句话总结：
+	父组件替换插槽的标签,但是内容由子组件来提供。
+```
+
+```
+一个简单需求：
+	子组件包括一组数据
+	需要在多个界面进行展示：
+		某些界面水平
+		某些界面列表
+	内容在子组件，希望父组件告诉我们如何展示
+```
+
+```
+这个是默认的，然后给插槽加上一个属性  :data="pLanguage" 名字可以随便选，字符串为组件的变量
+这里为data，所以 slot.data   如果为 :a='pLanguage'  slot.a
+<slot :data="pLanguage">
+    <ul>
+        <li v-for="(item, index) in pLanguage" :key="index">{{item}}</li>
+    </ul>
+</slot>
+```
+
+```
+父组件
+vue 2.5.x一下，需要使用template模板
+cpn
+			 lost-scope='s'  s.data  data是子组件自定写的名字为data
+	template slot-scope='slot' //''里面的值自己定义
+		span v-for='item in slot.data'
+			{{item}}
+```
+
+## 前端模块化
+
+常见模块化规范
+
+```
+CommonJS、AMD、CMD、ES6的Modules
+```
+
+### 早期使用匿名函数解决重名问题
+
+```
+非常简单,在匿名函数内部,定义一个对象。
+给对象添加各种需要暴露到外面的属性和方法(不需要暴露的直接定义即可)。
+最后将这个对象返回,并且在外面使用了一个MoudleA接受。
+
+这就是模块化最基础的封装
+```
+
+```
+let mA = (function () {
+	let obj = {};
+	
+	let flag = true;
+	
+	obj.myFunc = function(info) {
+		info.log;
+	}
+	obj.flag = flag;
+	return obj;
+})
+```
+
+```
+CommontJS模块化写法
+导出
+module.exports = {
+
+}
+导入
+var a = require('./aa')
+var flag = a.flag;
+var fn = a.fn;
+等于
+var {flag, fn} = require('./aa');
+```
 
 
 
