@@ -262,40 +262,325 @@ npm vue -save
 import Vue from 'vue'
 ```
 
+```
+import Vue from 'vue';
 
+const app = new Vue({
+	el: '#app',
+	data: {
+		
+	}
+})
 
+此时编译会报错，因为使用的是runtime-only  这个不能编译带有template的，他会把el挂载的那个作为一个template的组件
+runtime-only -> 代码中,不可以有任何的template
+runtime-compiler -> 代码中,可以有template,因为有compiler可以用于编译template
 
+可以通过在webpack的配置resolve来切换为compiler
+```
 
+```
+resolve: {
+  //导入模块简写省略指定后缀
+  extensions: ['.js', '.css', '.vue'],
+  // alias:别名
+  alias: {
+    //指定vue使用vue.esm.js
+    'vue$':'vue/dist/vue.esm.js'
+  }
+}
+```
 
+```
+单页面复应用，Simple page web application
+通过vue-router 进行跳转
 
+定义template属性：
+  在前面的Vue实例中,我们定义了el属性,用于和index.html中的#app进行绑定,让Vue实例之后可以管理它其中		的内容
+  这里,我们可以将div元素中的{{message}}内容删掉,只保留一个基本的id为div的元素
+  但是如果我依然希望在其中显示{{message}}的内容,应该怎么处理呢?
+  我们可以再定义一个template属性 ,代码如下:
+```
 
+<img src="images/image-20210824143925420.png" alt="image-20210824143925420" style="zoom:25%;" />
 
+```
+<div id="app"></div>
+  
+import App from './vue/App.vue'
+new Vue({
+  el: "#app",
+  //使用组件
+  template会将div#app替换掉
+  template: `
+  	div
+  		h2 {{message}}
+  		button @click='btnClick' {按钮}
+  		h2 {{name}}
+  `,
+  components: {
+    //注册局部组件
+    App
+  }
+})  
+```
 
+```
+优化
+
+const App = {
+	template: ` div
+  `,
+	data() {
+		return { message: 'sss' }
+	},
+	methods: {
+		btnClick() { }
+	}
+}
+
+new Vue({
+	el: '#app',
+	template: '<App/>',
+	components: {
+		App
+	}
+})
+```
+
+```
+将App分离成 vue文件
+
+template
+	div
+		button
+		
+script
+	export default {
+		name: 'App',
+    data() {
+      return {
+        mess: 'ssss'
+      }
+    },
+    methods: {
+      btnClick() {
+
+      }
+    }
+  }
+
+style scoped
+	.title {
+		color: green;
+	}
+```
+
+```
+使用vue文件
+import App from './vue/app.vue'
+
+需要配置对应的loader
+						vue文件加载			vue模板编译
+npm install vue-loader vue-template-compiler --save-dev
+
+webpack.config.js
+rules: [{
+	test: /\.vue$/,
+	use: {
+		loader: 'vue-loader'
+	}
+}]
+```
+
+```
+此时还是有问题，vue-loader从14这个版本开始，就需要再配置一个插件才能使用，如果不想配置这个插件，就换个低一点的版本 
+所以去 package.json 里面进行修改		"vue-loader": '^13.0.0'
+
+```
 
 ## plugin的使用
 
+```
+plugin 插件
+  plugin是插件的意思,通常是用于对某个现有的架构进行扩展。
+  webpack中的插件,就是对webpack现有功能的各种扩展,比如打包优化,文件压缩等等。
+
+plugin 和 loader 的区别
+  loader主要用于转换某些类型的模块,它是一个转换器。
+  plugin是插件,它是对webpack本身的扩展，是一个扩展器。
+  
+plugin 的使用过程：
+  步骤一 :通过npm安装需要使用的plugins(某些webpack已经内置的插件不需要安装)
+  步骤二:在webpack.config.js中的plugins中配置插件。 
+```
+
+### 版权 plugin
+
+```
+为打包的文件添加版权声明
+	BannerPlugin，属于webpack自带的插件
+	
+webpack.config.js
+const webpack = require('webpack');
+module.exports = {
+	plugins: [
+		new webpack.BannerPlugin('aa');
+	]
+}
+```
+
+<img src="images/image-20210824161720123.png" alt="image-20210824161720123" style="zoom:33%;" />
+
+```
+然后重新打包，查看js文件头部
+```
+
+<img src="images/image-20210824161953345.png" alt="image-20210824161953345" style="zoom:33%;" />
+
+### 打包html的plugin
+
+```
+作用：
+  我们知道,在真实发布项目时,发布的是dist文件夹中的内容,但是dist文件夹中如果没有index.htm|文件,那么打包的js等文件也就没有意义了。
+  所以,我们需要将index.html文件打包到dist文件夹中,这个时候就可以使用HtmIWebpackPlugin插件
+ 
+可以用来
+	自动生成一个index.html文件(可以指定模板来生成)
+  将打包的js文件,自动通过script标签插入到body中
+```
+
+```
+使用 
+安装
+npm install html-webpack-plugin --save-dev
+使用插件，修改webpack.config.js的plugins部分
+  这里的template表示根据什么模板来生成index.html.
+  另外,我们需要删除之前在output中添加的publicPath属性
+  否则插入的script标签中的src可能会有问题
+ 
+const htmlWbepackPlugin = require('html-webpack-plugin')
+
+plugins: [
+  new webpack. BannerPlugin( '最终版权归coderwhy所有'),
+  new htmlWebpackPlugin({
+  	template也可以不写，不写的话，就只有script的引入
+  	此时会找当前配置文件为路径来找index.html
+    template: 'index.html'
+	}),
+]
+```
+
+```
+index.html 模板
+不用添加script，因为plugin会自动添加
+
+<body>
+  <div id="app"></div>
+</body>
+```
+
+### js压缩的plugin
+
+```
+我们必然需要对js等文件进行压缩处理
+	这里,我们就对打包的js文件进行压缩
+	我们使用一个第三方的插件uglifjs-webpack-plugin ,并且版本号指定1.11, CLU2保持一致
+		npm install uglifyjs-webpack-plugin@1.1.1 --save-dev
+修改webpack.config.js文件，使用插件：
+	const UglifyjsWebpackPlugin = require('uglifyjs-webpack-plugin')
+	new UglifyjsWebpackPlugin()
+```
+
 ## 搭建本地服务器
 
+### dev-server基础和配置
 
+```
+webpack提供了一个可选的本地开发服务器,这个本地服务器基于node.js搭建,内部使用express框架,可以实现我们想要的让浏览器自动刷新显示我们修改后的结果。
+不过它是一个单独的模块 ,在webpack中使用之前需要先安装它
+	npm install --save-dev webpack-dev-server@2.9.1
+devserver也是作为webpack中的一个选项,选项本身可以设置如下属性:
+	contentBase :为哪一个文件夹提供本地服务,默认是根文件夹,我们这里要填写./dist
+	port :端口号
+	inline :页面实时刷新
+	historyApiFallback :在SPA页面中,依赖HTML5的history模式
+webpack.config.js文件配置修改如下: 
+我们可以再配置另外一个scripts :
+	--open参数表示直接打开浏览器
+```
 
+<img src="images/image-20210824194538781.png" alt="image-20210824194538781" style="zoom:33%;" />
 
+```
+webpack.config.js
+devServer: {
+	contentBase: './dist',
+	inline: true
+}
 
+package.json 
+srcipts 里面配置
+"dev" : webpack-dev-server --open(可以自动打开浏览器)
 
+npm run dev
+```
 
+### webpack配置文件分离
 
+```
+有的配置再开发阶段使用，但是发布阶段是不需要的，
+所以我们需要配置文件分离
+公共时的放base，dev时开发时的，prod是生产时的。
+base.config.js		dev.config.js	prod.config.js
 
+prod.config.js
+使用压缩代码
+base.config.js
+其他公共的
+使用module.exports = {} 作为入口和出口存放
+dev.config.js
+devServer 开发时，作为服务器
 
+最终编译	base+prod
+开发	base+dev
+```
 
+<img src="images/image-20210824195355841.png" alt="image-20210824195355841" style="zoom:33%;" />
 
+```
+最终使用步骤
 
+npm下载
+npm install webpack-merge --serve-dev
+	merge 合并
 
+使用
+base.config.js
+  这里因为把config文件从根目录存放到了build目录里面，所以需要把
+  output的path路径进行修改 
+  path: path.resolve(__dirname, '../dist'),//动态获取打包后的文件路径,path.resolve拼接路径
+prod.config.js
+  先导入 在	prod.config.js
+    const webpackMerge = require('webpack-merge')
+    导入base.config
+    const baseConfig = require('./base.config')
+  导出：
+    //使用webpackMerge将baseConfig和prod.config的内容合并
+    module.exports = webpackMerge(baseConfig, {
+      plugins:[
+        new uglifyjsWebpackPlugin()
+      ]
+    })
+dev.config.js
+  再在dev.config里面用同样的方式
+  引入 webpackMerge合并包，再导入 baseConfig
+  然后使用 module.exports = webpackMerge(baseConfig, {自己的})
 
-
-
-
-
-
-
-
+然后再在package.json里面的scripts里面  把打包（build）和开发（dev）的进行设置
+	build : webpack --config ./build/prod.config.js
+	dev : webpack-dev-server --open --config ./build/dev.config.js
+```
 
 # end
+
