@@ -85,7 +85,7 @@ new Vue({
 })
 ```
 
-## 箭头函数
+### 箭头函数
 
 ```
 h => h(App)
@@ -95,9 +95,90 @@ function(h) {
 }
 ```
 
-## Vue程序运行过程
+### Vue程序运行过程
+
+```
+当我们把template模板传给vue的时候，vue会保存在vue的实例下的options里面，
+然后会把template parse（解析）
+解析成一个ast的抽象语法树（abstract syntax tree）
+然后进行 compile（编译）
+变成 render（functions）render函数，也是放在vue实例的options里面
+之后就是通过render函数最终编译成一个virtual dom（虚拟dom）
+然后virtual dom通过diff和patch update渲染成真实的dom UI
+
+template -(parse)-> ast -(compile)-> render -(render)-> virtual dom -(update)-> UI
+```
 
 <img src="images/image-20210825102903851.png" alt="image-20210825102903851" style="zoom:50%;" />
+
+```
+所以 compile和only的区别就是
+compile是使用的template
+步骤：
+template -(parse)-> ast -(compile)-> render -(render)-> virtual dom -(update)-> UI
+
+only是使用的render
+步骤：
+render -(render)-> virtual dom -(update)-> UI
+1.性能更好，因为少处理了几步
+2.代码量也少，因为少了template到render的代码部分
+```
+
+### only
+
+```
+return createElement(
+  'h2',
+  {class:'box'},
+  ['hello vue', 
+  	createElement(
+      'button',
+      ['按钮'])])
+```
+
+```
+const app = {
+	template: 'div',
+	data() {
+		return {
+			
+		}
+	}
+}
+
+template: {	cpn }
+或者
+render: function(createElement) {
+	return createElement(cpn)
+}
+```
+
+```
+所以.vue文件是由 vue-template-compiler 进行解析的,
+把vue文件的tempalte解析为了render函数
+```
+
+## npm run build 的解析过程
+
+<img src="images/image-20210825121313833.png" alt="image-20210825121313833" style="zoom:100%;" />
+
+## npm run dev 的 解析过程
+
+<img src="images/image-20210825121410440.png" alt="image-20210825121410440" style="zoom:100%;" />
+
+## 修改配置：webpack.base.conf.js别名
+
+<img src="images/image-20210825121738181.png" alt="image-20210825121738181" style="zoom:67%;" />
+
+# Vue CLI3
+
+
+
+
+
+
+
+
 
 
 
