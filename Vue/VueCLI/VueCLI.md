@@ -730,33 +730,136 @@ router and route 区别
 
 ### vue-router导航守卫
 
+#### 全局守卫
 
+```
+生命周期函数
+created() {
+	在被创建时会执行
+	可以使用
+	document.title = 'xxx';
+}
 
+这样写的化，会每个地方都要写，很麻烦，
+我们可以知道这个标题和路由的跳转有关的，所以我们可以使用全局导航守卫，
+main.js
+router.beforeEach((to, from, next) => {
+	从from jump to to
+	这里使用 Mathcad是因为，/home/new 这里匹配不上，因为在子路由的原因（存在路由嵌套），所以需要使用matched来进行匹配
+	document.title = to.matched[0].meta.title;
+	next() this is necessary be used
+})
 
+router/index.js
+在每个路由里面
+{
+	path: '',
+	component: xx,
+	meta: {	//表示元数据，描述数据的数据
+		titile: 'xxxx'
+	}
+}
+```
 
+![image-20210827142333775](images/image-20210827142333775.png)
 
+```
+钩子（hook）：回调
+这里是守卫 guard
+前置钩子，在跳转之前进行修改  beforeEach
+后置钩子，跳转后，afterEach(to, from)
+	后置钩子不用调next（）函数
+	
+next('/')，可以跳转到/页面
+	
+上面这种导航守卫是全局守卫，
+	除了全局守卫之外，还有： 路由独享的守卫	组件内的守卫
+```
 
+#### 路由独享守卫
 
+![image-20210827143007288](images/image-20210827143007288.png)
 
+#### 组件内的守卫
 
+```
+beforeRouteEnter
+beforeRouteUpdate
+beforeRouteLeave
+```
 
-
-
-
+![image-20210827143046370](images/image-20210827143046370.png)
 
 ### keep-alive
 
+#### 使用
 
+```
+缓存组件状态
 
+使用
+keep-alive
+	router-view
+```
 
+```
+一个生命周期
+这两个函数，只有该组件被保持了状态使用了keep-alive状态时，才是有效的
+activated 活跃的
+activated() {
 
+}
+deactivated 不活跃的
+```
 
+#### keep-alive属性
 
+```
+keep-alive是Vue内置的一个组件,可以使被包含的组件保留状态,或避免重新渲染。
+它们有两个非常重要的属性:
+  include -字符串或正则表达,只有匹配的组件会被缓存
+  exclude -字符串或正则表达式,任何匹配的组件都不会被缓存
+router-view也是一个组件 ,如果直接被包在keep-alive里面,所有路径匹配到的视图组件都会被缓存:
+```
 
+<img src="images/image-20210827145839928.png" alt="image-20210827145839928" style="zoom:50%;" />
 
+```
+exclude='User'  这里的User就是User.vue里面的name
+```
 
+<img src="images/image-20210827145631993.png" alt="image-20210827145631993" style="zoom:50%;" />
 
+```
+先创建，在销毁
+这里不能随便加空格，
+```
 
+<img src="images/image-20210827145732026.png" alt="image-20210827145732026" style="zoom:50%;" />
+
+# 文件路径引用问题
+
+```
+文件夹起别名
+在webpack.base.conf.js 里面
+
+这里是给src起了别名alias @
+使用 @/components/tabbar/TabBar.vue
+
+经常添加的别名alias
+这里添加别名，不能使用前面的 
+'assets': resolve('@/assets')	  这里使用了前面使用的@，不能
+'assets': resolve('src/assets')		use:	assets/xx/xx
+'components'
+'views'
+```
+
+<img src="images/image-20210827151519017.png" alt="image-20210827151519017" style="zoom:50%;" />
+
+```
+使用别名之后，正常只有import导入才能使用
+img src='~assets/xx/xxx' 要使用波浪符号
+```
 
 # Vuex
 
