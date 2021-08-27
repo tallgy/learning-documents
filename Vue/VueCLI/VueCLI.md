@@ -592,25 +592,157 @@ this.$route 就是处于活跃状态的路由， /home   /about
 this.$route.params.id(这个id是path里面的那个:id)
 ```
 
+##### vue-router打包文件的解析
+
+```
+dist/static/js
+	app.js 当前应用程序开发的所有代码（业务代码）
+	vendor.js	vendor，提供商，第三方，  就是引用的第三方的东西 vue，vue-router
+	manifest.js	为打包的代码做底层支撑， 我们写的导入导出，的一些实现
+```
+
 ##### 路由的懒加载
 
 ```
+当打包构建应用时, Javascript包会变得非常大,影响页面加载。
+如果我们能把不同路由对应的组件分割成不同的代码块,然后当路由被访问的时候才加载对应组件,这样就更加高效了
 
+首先,我们知道路由中通常会定义很多不同的页面.
+这个页面最后被打包在哪里呢? 一般情况下，是放在一个js文件中.
+但是,页面这么多放在一个js文件中,必然会造成这个页面非常的大.
+如果我们一次性从服务器请求下来这个页面,可能需要花费一定的时间,甚至用户的电脑上还出现了短暂空白的情况.
+如何避免这种情况呢?使用路由懒加载就可以了.
 ```
 
+![image-20210827100237233](images/image-20210827100237233.png)
 
+###### 懒加载方式
 
+```
+1.结合Vue的异步组件和webpack代码分析
 
+const Home = resulve => { 
+	require.ensure(['../components/Home.vue'], () => {	  																	resolve(require('../components/Home.vue')) 
+	})
+}
+```
 
+```
+2.AMD写法
 
+const About = resolve => require(['../components/About.vue'], resolve);
+```
 
+```
+3.在ES6中,我们可以有更加简单的写法来组织Vue异步组件和Webpack的代码分割.
 
+const Home = () => import('../components/Home.vue')
+```
+
+```
+一个懒加载对应一个js文件
+```
 
 ### vue-router嵌套路由
 
+```
+比如在home页面中，我们希望通过/home/news和/home/message访问一些内容.
+一个路径映射一个组件,访问这两个路径也会分别渲染两个组件.
+```
+
+```
+
+```
+
+![image-20210827101102277](images/image-20210827101102277.png)
+
+#### 步骤
+
+##### index.js 路由配置
+
+```
+不要加 / 
+```
+
+<img src="images/image-20210827101440734.png" alt="image-20210827101440734" style="zoom:50%;" />
+
+##### Home.vue配置
+
+<img src="images/image-20210827101414597.png" alt="image-20210827101414597" style="zoom:50%;" />
+
+##### 默认路径
+
+<img src="images/image-20210827102419905.png" alt="image-20210827102419905" style="zoom:50%;" />
+
 ### vue-router参数传递
 
+```
+Profile.vue
+```
+
+```
+传递参数的类型： params && query
+
+params
+  配置路由格式: /router/:id
+  传递的方式:在path后面跟上对应的值
+  传递后形成的路径: /router/123, /router/abc
+  router-link :to="'/user' + id"
+使用
+	$route.params.id
+	
+query
+  配置路由格式: /router,也就是普通配置
+  传递的方式:对象中使用query的key作为传递方式
+  传递后形成的路径: /router?id= 123, /router?id=abc
+  router-link :to="{path: '/profile', query: {name: 'why', age: 18}}"	也可以只是用path		来代替以前的那些路径的写法
+使用
+	$route.query.name
+```
+
+```
+url:
+	协议(Scheme)（http）:localhost(主机):port(80可以不写)/path?query
+	scheme://host:port/ path?query#fragment
+```
+
+```
+使用函数代码进行传递
+this.$router.push('/user/' + this.id);
+this.$router.push({
+	path: '/profile',
+	query: {
+		name: 'kobe',
+		age: 18
+	}
+});
+```
+
+```
+所有的组件都继承自vue的原型
+
+Vue.protorype.$router = 'haha';
+
+router and route 区别
+  $router为VueRouter实例,想要导航到不同URL ,则使用$router.push方法
+  $route为当前router跳转对象里面可以获取name、path、 query. params等
+```
+
 ### vue-router导航守卫
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### keep-alive
 
