@@ -837,7 +837,7 @@ exclude='User'  这里的User就是User.vue里面的name
 
 <img src="images/image-20210827145732026.png" alt="image-20210827145732026" style="zoom:50%;" />
 
-# 文件路径引用问题
+# 文件路径引用问题，别名alias，@
 
 ```
 文件夹起别名
@@ -863,7 +863,146 @@ img src='~assets/xx/xxx' 要使用波浪符号
 
 # Vuex
 
+## vuex是做什么的
 
+```
+官方解释: Vuex是一个专为Vue.js应用程序开发的状态管理模式。
+  它采用集中式存储管理应用的所有组件的状态,并以相应的规则保证状态以一种可预测的方式发生变化。
+  Vuex 也集成到Vue的官方调试工具devtools extension ,提供了诸如零配置的time -travel调试、状态快照导入导出等高级调试功能。
+状态管理到底是什么?
+  状态管理模式、集中式存储管理这些名词听起来就非常高大上,让人捉摸不透。
+  其实,你可以简单的将其看成把需要多个组件共享的变量全部存储在一 个对象里面。
+  然后,将这个对象放在顶层的Vue实例中,让其他组件可以使用。
+  那么,多个组件是不是就可以共享这个对象中的所有变量属性了呢?
+等等,如果是这样的话,为什么官方还要专门出一个插件Vuex呢?难道我们不能自己封装一个对象来管理吗 ?
+  当然可以,只是我们要先想想VueJS带给我们最大的便利是什么呢?没错,就是响应式。
+  如果你自己封装实现一个对象能不能保证它里面所有的属性做到响应式呢?当然也可以,只是自己封装可能稍微麻烦一些。
+  不用怀疑, Vuex就是为了提供这样一个在多 个组件间共享状态的插件,用它就可以了。
+```
+
+```
+简单来想，就是在vue原型里面加入一个对象，因为所有的vue组件都是继承于vue原型的
+Vue.prototype.shareObj = shareObj;
+```
+
+## 单界面到多界面状态管理
+
+```
+有什么状态是需要我们在多个组件之间共享的呢
+  如果你做过大型开放,你一定遇到过多个状态,在多个界面间的共享问题。
+  比如用户的登录状态、用户名称、头像、地理位置信息等等。
+  比如商品的收藏、购物车中的物品等等。
+  这些状态信息,我们都可以放在统- -的地方 ,对它进行保存和管理,而且它们还是响应式的(待会儿我们就可以看到代码了,莫着急)。
+  
+talk is cheap, show me the code (Linus)
+```
+
+### 单界面状态管理
+
+```
+state
+	data() {return {}}
+	State :不用多说,就是我们的状态。( 你姑且可以当做就是data中的属性)
+view
+	{{mess}}
+	View :视图层,可以针对State的变化,显示不同的信息。( 这个好理解吧? )
+actions
+	act
+	Actions :这里的Actions主要是用户的各种操作:点击、输入等等，会导致状态的改变。
+```
+
+<img src="images/image-20210827220127781.png" alt="image-20210827220127781" style="zoom:50%;" />
+
+### 多页面的状态管理
+
+```
+Vue已经帮我们做好了单个界面的状态管理,但是如果是多个界面呢?
+  多个试图都依赖同一个状态( -个状态改了,多个界面需要进行更新)
+  不同界面的Actions都想修改同一个状态( Home.vue需要修改, Profile.vue也需要修改这个状态)
+也就是说对于某些状态(状态1/状态2/状态3)来说只属于我们某一个试图 ,但是也有一-些状态(状态a/状态b/状态c)属于多个试图共同想要维护的
+  状态1/状态2/状态3你放在自己的房间中,你自己管理自己用,没问题。
+  但是状态a/状态b/状态c我们希望交给一个大管家来统一 帮助我们管理! ! !
+  没错, Vuex就是为我们提供这个大管家的工具。
+全局单例模式(大管家)
+  我们现在要做的就是将共享的状态抽取出来,交给我们的大管家,统一进行管理。
+  之后,你们每个试图,按照我规定好的规定,进行访问和修改等操作。
+  这就是Vuex背后的基本思想。
+```
+
+```
+devtool 这个是vue提供的一个浏览器插件，可以记录每次修改state的状态，前提是要在Mutations
+	安装，在浏览器进行插件的添加，搜索vue
+actions 是可以不需要的，但是 mutations不能进行异步操作，会跟踪不到，所以actions可以用来进行异步操作，mutations只能用于同步，所以actions连接的是backend API 	[backend:后端，frontend:前端]
+```
+
+<img src="images/image-20210827221824861.png" alt="image-20210827221824861" style="zoom:50%;" />
+
+#### 使用
+
+```
+npm install vuex -S
+
+创建文件夹 store 仓库
+index.js
+	import vue
+	import vuex
+
+	安装插件
+	Vue.use(Vuex)	这里会执行vuex的install方法
+
+	创建对象
+	const store = new Vuex.Store({
+		state: {
+			counter: 100
+		},
+		mutations: {
+			increment() {
+				state,默认就有
+				state.counter++
+			},
+			decrement() {
+				state.counter--
+			}
+		},
+		actions: {},
+		getters: {},
+		modules: {}
+	})
+	
+	导出 store 独享
+	export default store
+	
+然后就在main.js
+	import store from './store'
+	
+	Vue.prototype.$store = store
+	其他地方可以用$store来使用
+```
+
+```
+使用
+	const store = new Vuex.Store({
+		state: {
+			counter: 100
+		}
+	})
+	
+	other use
+	$store.state.counter
+	
+	addition() {
+		不是这样
+		this.$store.mutations.increment();
+		
+		this.$store.commit('increment')
+	}
+	
+	修改数据时，不希望直接进行数据的修改
+```
+
+#### devtools 的界面
+
+<img src="images/image-20210827223038988.png" alt="image-20210827223038988" style="zoom:50%;" />
 
 
 

@@ -2,6 +2,8 @@
 
 ## Promise
 
+### 介绍和基本使用
+
 ```
 ES6中一个非常重要和好用的特性就是Promise
   但是初次接触Promise会一脸懵逼 ,这TM是什么东西?
@@ -42,7 +44,7 @@ new Promise((resolve, reject) => {
 ```
 
 ```
-异步操作，使用promise对异步操作进行封装
+一般是有异步操作时，使用promise对异步操作进行封装
 
 成功调用resolve
 resolve('sss')
@@ -51,11 +53,109 @@ resolve('sss')
 失败调用reject
 reject("err")
 .catch(err => {  })
+
+.then(data => { }, err => { })
 ```
+
+```
+new ->构造函数(1.保存了一些状态信息 2.执行传入的函数)
+在执行传入的回调函数时，会传入两个参数，resolve, reject.本身 又是函数
+```
+
+### promise的三种状态
 
 ![image-20210827164905787](images/image-20210827164905787.png)
 
+```
+sync 同步
+synchronization
 
+async 异步
+asynchronization
+
+async operation 异步操作
+pending 等待
+fulfilled 满足
+rejected 失败
+
+异步async操作之后会有三种状态
+pending :等待状态,比如正在进行网络请求,或者定时器没有到时间。
+fulfill :满足状态,当我们主动回调了resolve时,就处于该状态,并且会回调.then()
+reject :拒绝状态,当我们主动回调了reject时,就处于该状态,并且会回调.catch()
+```
+
+### 链式调用
+
+```
+new promise((resolve, reject) => { })
+.then(() => {
+	return new Promise((resolve, reject) => { })
+})
+.then(() => {
+	return new Promise((resolve, reject) => { })
+})
+.then(() => { })
+```
+
+```
+可以不要reject
+new Promise((resolve) => {
+	resolve()
+}).then(() => { })
+```
+
+```
+promise可以简写
+
+new Promise(resolve => {resolve()})
+Promise.resolve(res + '1111')
+Promise.reject(err)
+
+new Promise(resolve => resolve())
+.then(res => {
+	return Promise.resolve(res + '1111')
+}).then(res => {
+	return Promise.reject(res + '222');
+}).catch(err => {
+	err.log
+})
+
+也可以使用 throw 手动抛出异常
+throw 'error message'
+.catch()
+
+还能简写
+省略了 promise的包装，他会自动给你补充上
+new Promise(resolve => resolve())
+.then(res => {
+	return res + '1111';
+})
+```
+
+### promise all方法method
+
+```
+iterator 可迭代的
+
+代表了每个都进行了resolve 正常 fulfilled后，才会调用then方法，
+方法参数的 results代表了 数组 每次resolve的值
+Promise.all([
+	new Promise((resolve, reject) => { resolve(data) }),
+	new Promise((resolve, reject) => { resolve(data) })
+]).then(results => {
+	
+})
+```
+
+### promise源码
+
+```
+Promise(callback) {
+	this.then.callback = return callback.arguments[0].arguments;
+	callback();
+	then(callback)
+}
+```
 
 
 
