@@ -1515,9 +1515,202 @@ axios.all([
 }))
 ```
 
+![image-20210828195815599](images/image-20210828195815599.png)
 
+### axios配置信息
+
+#### 全局配置
+
+```
+事实上，在开发中可能很多参数都是固定的.
+这个时候我们可以进行些抽取， 也可以利用axiox的全局配置
+axios.defaults.baseURL='123.207.32.32: 8000'
+axios.defaults.headers.post['Content-Type'] =' application/X-WWWw-form-urlencoded';
+```
+
+```
+axios.defaults.baseURL = 'http://127.0.0.1:8080';
+axios.defaults.timeout = 5000;
+
+use
+axios({
+	url: '/home',
+})
+```
+
+#### 常见配置选项
+
+```
+请求地址
+	url: /user',
+请求类型
+	method: 'get',
+请根路径
+	baseURL: 'http://www.mt.com/api,
+请求前的数据处理
+	transformRequest:[function(data){],
+请求后的数据处理
+	transformResponse: [function(data){}],
+自定义的请求头
+	headers:{"x Requested-With:XMLHttpRequest'}, ，
+URL查询对象
+	params:{ id: 12 },
+查询对象序列化函数
+	paramsSerializer: function(params){ ) 
+requuest body
+	data: { key: 'aa'},
+超时设置s
+	timeout: 1000,
+跨域是否带Token
+	withCredentials: false,
+自定义请求处理
+	adapter: function(resolve, reject, config){},
+身份验证信息
+	auth: { uname: " pwd: '12'},
+响应的数据格式json/blob/document /arraybuffer/text/stream
+	responseType: 'json',
+```
 
 ### axios创建实例
+
+```
+创建实例 create instance
+const instance1 = axios.create({
+	baseURL: '127....8080',
+	timeout: 5000
+})
+
+使用 use
+instance1({
+	url: '/home',
+	params: {
+		
+	}
+}).then()
+```
+
+#### 封装
+
+```
+将axios放在network文件夹里面
+在里面创建js代码作为请求的封装（example：request.js)
+```
+
+##### 使用回调函数封装
+
+```
+request.js
+
+import axios from 'axios';
+export funtion request(config, success, failure) {
+	const instance = 	axios.create({
+		baseURL: 'http://127.0.0.1:8080',
+		timeout: 5000
+	})
+	
+	instance(config) {
+		.then(res => {
+			success(res);
+		})
+		.catch(err => {
+			failure(err);
+		})
+	}
+}
+
+
+use
+main.js
+import { request } from './request.js';
+
+request({
+	url: '/home'
+}, res => {
+	res.log
+}, err => {
+	err.log
+})
+```
+
+##### 使用对象和回调
+
+```
+传入的参数变成了config的对象
+config = {
+ baseConfig: {
+ 	url: '/hoem'
+ },
+ success: function(res) {
+ 	
+ },
+ failure: function(err) {
+ 	
+ }
+}
+```
+
+##### 使用 promise
+
+```
+return new  Promise((resolve, reject) => {
+	const instance = axios.create({
+		baseURL: 'http:',
+		timeout: 5000
+	});
+	
+	instace(config)
+		.then(res => resolve(res) )
+		.catch(err => reject(err) )
+})
+
+use
+request({
+	url: '/hoem'
+}).then(res => {
+	
+}).catch(err => {
+	
+})
+```
+
+##### 对上面的进行修改
+
+```
+export function request(config) {
+	const instance = axios.create({
+		baseURL: ''
+	})
+	
+	return instance(config);
+}
+
+use
+和上面一样 ，因为instance里面的就是一个promise，不然在6.3.4.1.3上面怎么会出现在 调用了instance之后.then方法，所以这是一个promise，直接返回，在外面可以直接使用.then方法，不需要再进行promise的封装
+
+request({
+	url: ''
+})
+	.then(res => {
+		
+	})
+	.catch(err => {
+	
+	})
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### axios拦截器的使用
 
