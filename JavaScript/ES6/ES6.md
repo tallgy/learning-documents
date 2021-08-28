@@ -159,11 +159,34 @@ Promise(callback) {
 
 
 
+## 解构
 
+### 对象的解构
 
+```
+const obj = {
+	name: 1,
+	age: 2,
+	add: '1'
+}
 
+const name = obj.name;
+const age = obj.age;
+```
 
+```
+使用解构
 
+这里是把名字进行分配，没有 的就不会取,不是按照顺序
+const {name, age} = obj;
+```
+
+### 数组的解构
+
+```
+const names = [1, 2];
+const [n1, n2] = names;
+```
 
 
 

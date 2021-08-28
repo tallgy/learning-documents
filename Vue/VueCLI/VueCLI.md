@@ -1004,9 +1004,564 @@ index.js
 
 <img src="images/image-20210827223038988.png" alt="image-20210827223038988" style="zoom:50%;" />
 
+## Vuex的核心core概念
 
+```
+state
+	单一状态树
+getters
+mutation
+action
+module
+```
+
+## state单一状态树
+
+```
+Vuex提出使用单一状态树,什么是单一状态树呢?
+  英文名称是Single Source of Truth ,也可以翻译成单-数据源。
+但是,它是什么呢?我们来看-个生活中的例子。
+  OK ,我用一个生活中的例子做一个简单的类比。
+  我们知道,在国内我们有很多的信息需要被记录,比如上学时的个人档案,工作后的社保记录,公积金记录,结婚后的婚姻信息,以及其他相关的户口、医疗文凭房产记录等等(还有很多信息)。
+  这些信息被分散在很多地方进行管理,有一天你需要办某个业务时(此如入户某个城市) ,你会发现你需要到各个对应的工作地点去打印、盖章各种资料信息,最后到一个地方提交证明你的信息无误。
+  这种保存信息的方案,不仅仅低效,而且不方便管理,以及日后的维护也是- - 个庞大的工作(需要大量的各个部]的人力来维护,当然国家目前已经在完善我们的这个系统了)。
+这个和我们在应用开发中比较类似:
+  如果你的状态信息是保存到多个Store对象中的,那么之后的管理和维护等等都会变得特别困难。
+  所以Vuex也使用了单一-状态树来管理应用层级的全部状态。
+  单一状态树能够让我们最直接的方式找到某个状态的片段,而且在之后的维护和调试过程中,也可以非常方便的管理和维护。
+```
+
+## getters 基本使用basic use
+
+![image-20210828095219491](images/image-20210828095219491.png)
+
+```
+getters: {
+	powerCounter(state) { return state.counter^2 }
+}
+
+作为 一个属性，而不是一个方法
+$store.getters.powerCounter
+
+使用computed:计算属性
+computed: { more20stu() {
+	return this.$store.state.students.filter(s => s.age>=20)
+}}
+上面这个是放在组件的，所以如果其他组件要使用也得写，所以我们可以放在getters里面
+```
+
+### getters作为参数和传递参数
+
+```
+getters: {
+	more(state) {
+		state.students.filter(s => s.age > 20)
+	},
+	moreLength(state, getters) {
+		return getters.more.length;
+	}
+}
+```
+
+### getters返回函数
+
+```
+getters: {
+	age(state) {
+		return function(age) {
+			return state.students.filter(s => s.age > age)
+		}
+	}
+}
+
+调用
+这里，前面的
+	$store.getters.age将会在getters里面调用，并返回一个函数，所以后面再加上()进行函数的调用
+$store.getters.age(2)
+```
+
+![image-20210828100734493](images/image-20210828100734493.png)
+
+## mutations
+
+### mutation状态更新
+
+```
+Vuex的store状态的更新唯一方式:提交Mutation
+Mutation主要包括两部分:
+	字符串的事件类型( type )
+	一个回调函数( handler ) ,该回调函数的第一个参数就是state。
+```
+
+<img src="images/image-20210828100948403.png" alt="image-20210828100948403" style="zoom:50%;" />
+
+### mutation传递参数
+
+```
+专业名词 payload 
+
+在通过mutation更新数据的时候,有可能我们希望携带一 些额外的参数
+	参数被称为是mutation的载荷(Payload)
+Mutation中的代码:
+decrement(state, n) { state. count -= n }
+使用
+decrement: function () { this.$store.commit('decrement', 2) }
+但是如果参数不是-个呢?
+	比如我们有很多参数需要传递.
+	这个时候,我们通常会以对象的形式传递也就是payload是一个对象.
+	这个时候可以再从对象中取出相关的信息.
+changeCount(state, pay1oad) { state.count = payload.count }
+使用
+changeCount: function () {
+	this.$store.commit('changeCount', {count: 0})
+}
+```
+
+```
+mutations: {
+	increC(state, count) {
+		state.couonter += count;
+	}
+}
+
+使用
+this.$store.commit('increC', 3)
+```
+
+### mutation提交风格 commit style
+
+```
+mutations: {
+事件类型，
+	inC(state, payload) {
+    这里的payload成为了一个对象
+      {
+        type: 'inC',
+        count: 5,
+        xxx
+      }
+		state.counter += payload.count
+	}
+}
+
+use
+methods: {
+	clickC(count) {
+		this.$store.commit({
+			type: 'inC',
+			count
+		})
+	}
+}
+```
+
+![image-20210828102629106](images/image-20210828102629106.png)
+
+### mutation类型常量
+
+```
+
+```
+
+```
+放在 store/mutations-types.js
+
+export const INCREMENT = 'increment'
+
+导入 import
+import * as const from './store/mutations-types.js'
+or
+import {
+	INCREMENT
+} from './store/mutations-types.js'
+
+在对象里面的方法,可以这样 写
+const.INCREMENT
+mutations: {
+	[INCREMENT]() {}
+}
+```
+
+<img src="images/image-20210828104726299.png" alt="image-20210828104726299" style="zoom:3=50%;" />
+
+![image-20210828105252772](images/image-20210828105252772.png)
+
+### mutation同步函数
+
+```
+通常情况下，Vuex要求我们Mutation中的方法必须是同步方法.
+  主要的原因是当我们使用devtools时,可以devtools可以帮助我们捕捉mutation的快照
+  但是如果是异步操作,那么devtools将不能很好的追踪这个操作什么时候会被完成.
+```
+
+## Vux响应式原理
+
+### mutation响应规则
+
+```
+Vuex的store中的state是响应式的,当state中的数据发生改变时，Vue组件会自动更新.
+这就要求我们必须遵守些Vuex对应的规则:
+  提前在store中初始化好所需的属性.
+  当给state中的对象添加新属性时,使用下面的方式:
+  ➢方式-:使用Vue.set(obj, 'newProp', 123)
+  ➢方式二:用新对象给旧对象重新赋值
+```
+
+<img src="images/image-20210828104448752.png" alt="image-20210828104448752" style="zoom:50%;" />
+
+```
+每个属性都有 dep -> [watcher]
+通过观察者模式
+当发生数据变化了，就会通知watcher，这里watcher不只有一个，
+
+这些属性都会被加入到响应式系统中，而响应式系统会监听属性的变化，当属性发生变化时，会通知所有男面中用到该属性的地方，让界面发生刷新
+```
+
+![image-20210828103425859](images/image-20210828103425859.png)
+
+```
+state.info['address'] = 'luo shan ji'
+这样写，因为没有再state的info里面定义国address，所以这个不会加入到响应式系统里面，所以不会进行刷新
+
+为了让其响应式
+Vue.set(state.info, 'address', 'luo shan ji')
+这样写就会把address加入响应式系统
+Vue.delete(state.info, 'age')
+```
+
+<img src="images/image-20210828104111391.png" alt="image-20210828104111391" style="zoom:50%;" />
+
+## action
+
+```
+但是某些情况,我们确实希望在Vuex中进行一些异步操作, 比如网络请求,必然是异步的.这个时候怎么处理呢?
+Action类似于Mutation,但是是用来代替Mutation进行异步操作的.
+```
+
+### basic use
+
+```
+context， payload(params)
+context.commit('update')
+payload or payload.aa
+
+this.$store.dispatch('aUpdate', {
+	mess: 'sss',
+})
+```
+
+<img src="images/image-20210828150336491.png" alt="image-20210828150336491" style="zoom:50%;" />
+
+<img src="images/image-20210828150319378.png" alt="image-20210828150319378" style="zoom:50%;" />
+
+### 使用回调函数
+
+```
+context, payload
+context.commit('update')
+payload.callback()
+
+
+this.$store.dispatch('aUpdate', {
+	callback() {
+		xxx
+	}
+})
+```
+
+### 使用promise进行异步的回调
+
+<img src="images/image-20210828150702763.png" alt="image-20210828150702763" />
+
+<img src="images/image-20210828150702763.png" alt="image-20210828150702763" style="zoom:50%;" />
+
+## modules
+
+### learn
+
+```
+Module是模块的意思,为什么在Vuex中我们要使用模块呢?
+  Vue使用单-状态树，那么也意味着很多状态都会交给Vuex来管理.
+  当应用变得非常复杂时,store对象就有可能变得相当臃肿.
+  为了解决这个问题, Vuex允许我们将store分割成模块(Module),而每个模块拥有自己的state、mutations、actions、getters等
+```
+
+### basic use
+
+```
+modules: {
+	a: {
+		state: {},
+		mutatios: {},
+		actions: {},
+		modules: {}
+	}
+}
+```
+
+分解
+
+```
+const moduleA = { }
+
+const store = new Vuex.store({
+	modules: {
+		a: moduleA
+	}
+})
+```
+
+<img src="images/image-20210828151549691.png" alt="image-20210828151549691" style="zoom:50%;" />
+
+```
+state
+这里需要 .a 之后在name
+$store.state.a.name
+
+mutations
+提交mutations，这里名字可以 直接写，因为他会先找 本来的mutations，如果没有才会去找 模块里面的mutations
+$store.commit('aaa');
+
+getter
+直接调用，不用管
+$store.getters.fullname
+```
+
+#### getter的几个参数
+
+```
+在module里面， 
+第一个state， 本模块的state
+第二个 getters， 本模块的getters
+第三个 rootState 父级模块的state
+```
+
+<img src="images/image-20210828152309151.png" alt="image-20210828152309151" style="zoom:50%;" />
+
+## Vuex项目结构
+
+<img src="images/image-20210828153314369.png" alt="image-20210828153314369" style="zoom:50%;" />
+
+```
+就是在一个文件导出，一个文件导入
+
+导出
+const mutations = {
+
+};
+export default mutations;
+
+导入
+import mutations from './mutations.js'
+
+const store = new Vue.store({
+	mutations
+})
+```
 
 # axios 网络请求封装
+
+## 常见的网络请求模块,以及优缺点对比。
+
+```
+选择一: 传统的Ajax是基于XMLHttpRequest(XHR)
+为什么不用它呢?
+  非常好解释，配置和调用方式等非常混乱.
+  编码起来看起来就非常蛋疼.
+  所以真实开发中很少直接使用，而是使用jQuery- Ajax
+  
+  
+选择二:在前面的学习中，我们经常会使用jQuery-Ajax
+  ➢相对于传统的Ajax非常好用.
+为什么不选择它呢?
+  ➢首先, 我们先明确一点: 在Vue的整个开发中都是不需要使用jQuery了.
+  ➢
+  那么，就意味着为了方便我们进行一个网络请求，特意引用一个jQuery,你觉得合理吗?
+  ➢jQuery的代码1w+行.
+  ➢Vue的代码才1w+行.
+  ➢完全没有必要为了用网络请求就引用这个重量级的框架.
+
+
+选择三:官方在Vue1.x的时候，推出了Vue-resource.
+  Vue-resource的体积相对于jQuery小很多. 
+  另外Vue-resource是官方推出的.
+为什么不选择它呢?
+  ➢在Vue2.0退出后, Vue作者就在GitHub的Issues中说明了去掉vue-resource,并且以后也不会再更新.
+  ➢那么意味着以后vue-reource不再支持新的版本时，也不会再继续更新和维护.
+  ➢对以后的项目开发和维护都存在很大的隐患.
+
+
+选择四:在说明不再继续更新和维护vue-resource的同时，作者还推荐了一个框架: axios为什么不用它呢?
+  axios有非常多的优点，并且用起来也非常方便
+  稍后，我们对他详细学习.
+```
+
+
+
+## JSONP的原理和封装
+
+### JSONP原理回顾
+
+```
+在前端开发中，我们一种常见的网络请求方式就是JSONP 
+  使用JSONP最主要的原因往往是为了解决跨域访问的问题.
+JSONP的原理是什么呢?
+  JSONP的核心在于通过< script>标签的src来帮助我们请求数据
+  原因是我们的项目部署在domain1.com服务器上时，是不能直接访问domain2.com服务器上的资料的.
+  这个时候，我们利用<script>标签的src帮助我们去服务器请求到数据，将数据当做一个javascript的函数来执行， 并且执行的过程中传入我们需要的json.
+  口所以封装jsonp的核心就在F我们监听window上的jsonp进行回调时的名称.
+```
+
+<img src="images/image-20210828155907467.png" alt="image-20210828155907467" style="zoom:50%;" />
+
+### JSONP请求封装
+
+![image-20210828155932967](images/image-20210828155932967.png)
+
+## axios的内容详解
+
+### 认识axios网络模块
+
+```
+特点
+
+在浏览器中发送XMLHttpRequests请求
+在node.js中发送http请求
+支持Promise API
+拦截请求和响应
+转换请求和响应数据
+等等
+```
+
+#### 请求方式
+
+```
+axios(config)
+axios.request(config)
+axios.get(url[, config])
+axios.delete(urI[ config])
+axios.head(url[ config])
+axios.post(url[ data[ config]])
+axios.put(urI[ data[ config]])
+axios.patch(url[ data[, config]])
+```
+
+### 发送基本请求
+
+```
+install
+
+npm install axios -S
+
+basic use
+
+method one
+import axios from 'axios'
+axios({
+	url: 'https://',
+	method: 'get', //post
+}).then(res => res.log)
+
+method two
+axios.post(url, config)
+```
+
+```
+get请求request 参数param  contact
+axios({
+	url: 'xxxx?type=pop&page=1',
+})
+
+axios({
+	url: 'xxxx',
+	params: {
+		type: 'pop',
+		page: 1
+	}
+})
+```
+
+get请求案例
+
+<img src="images/image-20210828161533971.png" alt="image-20210828161533971" style="zoom:50%;" />
+
+#### 发送并发请求
+
+```
+使用axios.all,可以放入多个请求的数组.
+axios.all(])返回的结果是一个数组,使用axios.spread可将数组[res1,res2]展开为res1, res2 
+```
+
+```
+axios.all([
+	axios({
+		url: 'xxx',
+		
+	}),
+	axios({
+		url: 'xxx',
+		params: {
+			type: 'sell',
+			page: 5
+		}
+	})
+])
+.then(results => {
+	
+})
+
+,then(axios.spread((res1, res2) => {
+	
+}))
+```
+
+
+
+### axios创建实例
+
+### axios拦截器的使用
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
