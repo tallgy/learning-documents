@@ -1993,6 +1993,54 @@ import * as aaa from './aaa.js'
 	aaa.flag
 ```
 
+## 防抖节流
+
+```
+对于refresh刷新频繁的问题，进行防抖 操作
+防抖debounce/节流throttle
+防抖函数起作用的过程:
+	如果我们直接执行refresh,那么refresh函数会被执行30次.
+	可以将refresh函数传 入到debounce函数中,生成-个新的函数.
+```
+
+```
+这个的作用是生成闭包，timer，
+debounce(func, delay) {
+	let  timer = null;
+	
+	return function(...args) {
+		if (timer) clearTimeout(timer);
+		
+		timer = setTimeout(() => {
+			func.apply(this, args)
+		}, delay)
+	}
+}
+```
+
+## 事件总线
+
+## 项目目录结构
+
+```
+src
+	assets 资源 
+		img
+		css
+	components	组件，公共的组件
+		common	这是完全公共的组件，可以跨项目使用的
+		content	和业务相关的公共组件
+	view	大的视图，购物车一类的
+		category （这是个例子）
+	router	路由
+	store	状态管理
+	network	网络相关
+	common	公共的js文件
+		const.js	公共的js文件，公共的常量
+		utils.js	一些公共的方法
+		
+```
+
 
 
 

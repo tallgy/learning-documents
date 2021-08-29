@@ -1574,6 +1574,16 @@ requuest body
 ### axios创建实例
 
 ```
+当我们从axios模块中导入对象时，使用的实例是默认的实例.
+当给该实例设置一些默认配置时，这些配置就被固定下来了.
+但是后续开发中，某些配置可能会不太一样.
+比如某些请求需要使用特定的baseURL或者timeout或者content-Type等.
+这个时候，我们就可以创建新的实例，并且传入属于该实例的配置信息.
+```
+
+![image-20210829100715848](images/image-20210829100715848.png)
+
+```
 创建实例 create instance
 const instance1 = axios.create({
 	baseURL: '127....8080',
@@ -1698,68 +1708,43 @@ request({
 	})
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### axios拦截器的使用
 
+```
+axios提供了拦截器,用于我们在发送每次请求或者得到相应后,进行对应的处理。
 
+请求成功，请求失败，
+响应成功，响应失败
+```
 
+#### basic use
 
+```
+axios.interceptors.request
+instance.interceptors.request
+```
 
+![image-20210829100806092](images/image-20210829100806092.png)
 
+```
+请求拦截
+instance.interceptors.request.use(config => {
+	config.log
+	return config;
+}, err => {
+	err.log
+})
 
+响应 拦截 response
+同上 res   err
+```
 
+```
+这里会把config拦截掉，如果不返回出去，就无法拿到返回的结果
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+1.比如config中的些信总不符合服务器的要求
+2.比如每次发送网络请求时，都希望在界面中显示一个请求的图标
+3.某些网络请求(比如登录(token)), 必须携带一 些特殊的信息
+```
 
 # end
