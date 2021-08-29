@@ -2041,9 +2041,225 @@ src
 		
 ```
 
+# 面试题
+
+## 如何理解vue生命周期
+
+## 如何进行非父子组件通信
+
+## Vue响应式原理
+
+![image-20210829142124265](images/image-20210829142124265.png)
+
+![image-20210829144915132](images/image-20210829144915132.png)
+
+```
+app .message修改数据，Vue内部是如何监听message数据的改变
+	object.defineProperty -> 监听对象属性的改变
+当数据发生改变，Vue是如何知道通知哪些人，界面发生刷新
+	发布订阅者模式
+```
+
+```
+监听
+
+const obj = {
+	message: 'hahaha',
+}
+
+Object.key(obj).forEach(key => {
+	let value = obj[key];
+	
+	这里这个东西，可以监听到数据的改变，可以在 这里进行一些操作
+	Object.defineProperty(obj, key, {
+		set(newValue) {
+      ('监听' + key + '改变').log
+      value = newValue
+    },
+    get() {
+      ('获取' + key + '的值').log
+      return value
+    }
+	})
+})
+
+obj.message = 'aaaa';
+```
+
+```
+谁用了，就是调用了get方法，所以在给他们加上订阅者模式
+```
+
+```
+发布者订阅者
+
+发布者
+class Dep {
+	constructor() {
+		this.subs = []
+	}
+	
+	addSub(watcher) {
+		this.subs.push(watcher)
+	}
+	
+	notify() {
+		this.subs.forEach(item => {
+			item.update();
+		})
+	}
+}
+
+订阅者
+class Watcher {
+	constructor(name) {
+		this.name = name;
+	}
+	
+	update() {
+		(this.name + 'update').log
+	}
+}
+
+const dep = new Dep();
+
+const w1 = new Watcher('san')
+dep.addSub(w1);
+```
+
+### 源码
+
+```
+
+  class Vue {
+    constructor(options) {
+      // save data 保存数据
+      this.$options = options;
+      this.$data = options.data;
+      this.$el = options.el;
+
+      // 将data添加add到响应式系统中
+      new Observer(this.$data);
+
+      // 代理 proxy this.$data的数据dta
+      Object.keys(this.$data).forEach(key => {
+          this._proxy(key);
+      })
+
+      // 处理deal el
+      new Compiler(this.$el, this);
+    }
+  }
 
 
+  class Observer {
+    constructor(data) {
+      this.data = data;
 
+      Object.keys(data).forEach(key => {
+        this.defineReactive(this.data, key, data[key])
+      })
+    }
+
+    defineReactive(data, key, val) {
+      const dep = new Dep();
+      Object.defineProperty(data, key, {
+        enumerable: true,
+        configurable: true,
+        get() {
+          if (Dep.target) {
+            dep.addSub(Dep.target);
+          }
+          return val;
+        },
+        set(newValue) {
+          if (newValue === val) {
+            return
+          }
+          val = newValue;
+          dep.notify();
+        }
+      })
+    }
+  }
+
+
+  class Dep {
+    constructor() {
+      this.subs = [];
+    }
+
+    addSub(sub) {
+      this.subs.push(sub);
+    }
+
+    notify() {
+      this.subs.forEach(sub => {
+        sub.update();
+      })
+    }
+  }
+
+
+  class Watcher {
+    constructor(node, name, vm) {
+      this.node = node;
+      this.name = name;
+      this.vm = vm;
+      Dep.target = this;
+      this.update();
+      Dep.target = null;
+    }
+
+    update() {
+      this.node.nodeValue = this.vm[this.name];
+    }
+  }
+
+
+  const reg = /\{\{(.*)\}\}/;
+  class Compiler {
+    constructor(el, vm) {
+      this.el = document.querySelector(el);
+      this.vm = vm;
+
+      this.frag = this._createFragment();
+      this.el.appendChild(this.frag);
+    }
+
+    _createFragment() {
+      const frag = document.createDocumentFragment();
+
+      let child;
+      while (child = this.el.firstChild) {
+        this._compile(child);
+        frag.appendChild(child);
+      }
+      return frag;
+    }
+
+    _compile(node) {
+      if (node.nodeType === 1) {  //等于1表示标签节点
+        const attrs = node.attributes;
+        if (attrs.hasOwnProperty('v-model')) {
+          const name = attrs['v-model'].nodeValue;
+          node.addEventListener('input', e => {
+            this.vm[name] = e.target.value;
+          })
+        }
+      }
+      if (node.nodeType === 3) {  //等于文本节点
+        console.log(res.test(node.nodeValue));
+        if (reg.test(node.nodeValue)) {
+          const name = RegExp.$1.trim();  //$1拿正则里面的第一个的()
+          console.log(name);
+          new Watcher(node, name, this.vm);
+        }
+      }
+    }
+  }
+  
+```
 
 # end
 
