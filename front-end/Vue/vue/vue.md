@@ -1,14 +1,5 @@
 # Vue
 
-```
-unix编程艺术
-代码大全
-深入理解计算机原理
-现代操作系统
-```
-
-
-
 ## vue认识
 
 ### Vue是一个渐进式的框架
@@ -169,7 +160,7 @@ Model ViewModel View
 ViewModel是Model和View通信之间的桥梁，当你有数据要展示的时候，ViewModel会自动把数据绑定到View上面，当我们View有些事件或操作也是通过ViewModel
 ```
 
-<img src="vue.assets/image-20210819162257668.png" alt="image-20210819162257668" style="zoom:50%;" />
+<img src="images/image-20210819162257668.png" alt="image-20210819162257668" style="zoom:50%;" />
 
 ```
 View层:
@@ -209,9 +200,9 @@ function Person() { function a() {} }
 
 ```
 
-![lifecycle](vue.assets/lifecycle.png)
+![lifecycle](images/lifecycle.png)
 
-![lifecycle9](vue.assets/lifecycle9-1629382878007.jpg)
+![lifecycle9](images/lifecycle9-1629382878007.jpg)
 
 ## vue插值操作 Mustache语法
 
@@ -442,7 +433,7 @@ computed: {
 },
 ```
 
-<img src="vue.assets/image-20210820135726461.png" alt="image-20210820135726461" style="zoom:50%;" />
+<img src="images/image-20210820135726461.png" alt="image-20210820135726461" style="zoom:50%;" />
 
 ### 计算属性的复杂操作
 
@@ -748,7 +739,7 @@ Vue提供了修饰符来帮助我们方便的处理一些事件
 .once -只触发一次回调。
 ```
 
-<img src="vue.assets/image-20210820161902134.png" alt="image-20210820161902134" style="zoom:50%;" />
+<img src="images/image-20210820161902134.png" alt="image-20210820161902134" style="zoom:50%;" />
 
 #### .stop 停止冒泡修饰符
 
@@ -891,7 +882,7 @@ v-for="(value, key, index) in user"
 
 ```
 
-<img src="vue.assets/image-20210820193648837.png" alt="image-20210820193648837" style="zoom:50%;" />
+<img src="images/image-20210820193648837.png" alt="image-20210820193648837" style="zoom:50%;" />
 
 ```
 <!-- 不加key如果要插入f依次改变 -->
@@ -903,7 +894,7 @@ v-for="(value, key, index) in user"
 现在，我在li的b和c之前插入f ，步骤如下
 ```
 
-<img src="vue.assets/image-20210820195145626.png" alt="image-20210820195145626" style="zoom: 50%;" />
+<img src="images/image-20210820195145626.png" alt="image-20210820195145626" style="zoom: 50%;" />
 
 ```
 上面这个性能比较低，如果我们加上一个key的话，可以提高性能
@@ -974,7 +965,7 @@ filters: {
 编写位置
 ```
 
-<img src="vue.assets/image-20210820205316999.png" alt="image-20210820205316999" style="zoom:25%;" />
+<img src="images/image-20210820205316999.png" alt="image-20210820205316999" style="zoom:25%;" />
 
 ## v-model 双向绑定
 
@@ -1026,7 +1017,7 @@ filters: {
 <button :disabled="!isAgree">下一步</button>
 ```
 
-<img src="vue.assets/image-20210821153258795.png" alt="image-20210821153258795" style="zoom:33%;" />
+<img src="images/image-20210821153258795.png" alt="image-20210821153258795" style="zoom:33%;" />
 
 #### 多选框
 
@@ -1035,7 +1026,7 @@ filters: {
 <input type="checkbox" name="hobby" value="羽毛球"  v-model="hobbies">羽毛球
 ```
 
-<img src="vue.assets/image-20210821153228491.png" alt="image-20210821153228491" style="zoom: 33%;" />
+<img src="images/image-20210821153228491.png" alt="image-20210821153228491" style="zoom: 33%;" />
 
 ```
 注意：
@@ -1153,7 +1144,7 @@ trim修饰符:
 使用组件
 ```
 
-<img src="vue.assets/image-20210821160235105.png" alt="image-20210821160235105" style="zoom:50%;" />
+<img src="images/image-20210821160235105.png" alt="image-20210821160235105" style="zoom:50%;" />
 
 ```
 创建组件
@@ -1376,7 +1367,7 @@ cpn1:{
 
 ## 组件之间的通信
 
-<img src="vue.assets/image-20210822152031092.png" alt="image-20210822152031092" style="zoom:33%;" />
+<img src="images/image-20210822152031092.png" alt="image-20210822152031092" style="zoom:33%;" />
 
 ```
 有些数据确实需要从上层传递到下层：
@@ -1433,7 +1424,7 @@ const app = new Vue({
 })
 ```
 
-<img src="vue.assets/image-20210822125216326.png" alt="image-20210822125216326" style="zoom:80%;" />
+<img src="images/image-20210822125216326.png" alt="image-20210822125216326" style="zoom:80%;" />
 
 ### props数据验证
 
@@ -1442,13 +1433,13 @@ const app = new Vue({
 String	Number	Boolean	Array	Object	Date	Function	Symbol
 ```
 
-<img src="vue.assets/image-20210822125443950.png" alt="image-20210822125443950" style="zoom:50%;" />
+<img src="images/image-20210822125443950.png" alt="image-20210822125443950" style="zoom:50%;" />
 
-<img src="vue.assets/image-20210822125659833.png" alt="image-20210822125659833" style="zoom:80%;" />
+<img src="images/image-20210822125659833.png" alt="image-20210822125659833" style="zoom:80%;" />
 
 类型是对象或者数组的默认值
 
- <img src="vue.assets/image-20210822125835348.png" alt="image-20210822125835348" style="zoom:50%;" />
+ <img src="images/image-20210822125835348.png" alt="image-20210822125835348" style="zoom:50%;" />
 
 ### props的驼峰标识
 
@@ -1459,7 +1450,7 @@ cInfo  v-info
 在vue里面可以使用驼峰，应该是在vue里面有个编译，然后转换成render文件，所以没有问题，如果使用原生的进行编译就会出现问题
 ```
 
-<img src="vue.assets/image-20210822143433684.png" alt="image-20210822143433684" style="zoom:67%;" />
+<img src="images/image-20210822143433684.png" alt="image-20210822143433684" style="zoom:67%;" />
 
 ### 子传父（自定义事件）
 
@@ -1494,7 +1485,7 @@ cpnClcik(item) {
 }
 ```
 
-<img src="vue.assets/image-20210822152130367.png" alt="image-20210822152130367" style="zoom:33%;" />
+<img src="images/image-20210822152130367.png" alt="image-20210822152130367" style="zoom:33%;" />
 
 ### 父子组件通信修改值
 
@@ -1502,7 +1493,7 @@ cpnClcik(item) {
 首先，对于props，是不建议直接对值进行修改的，所以，这里是通过将值返回给data里面，然后，修改dnumber的操作
 ```
 
-<img src="vue.assets/image-20210822160459599.png" alt="image-20210822160459599" style="zoom:50%;" />
+<img src="images/image-20210822160459599.png" alt="image-20210822160459599" style="zoom:50%;" />
 
 
 
@@ -1596,14 +1587,14 @@ cpnClcik(item) {
 监听的改变有 类型和值的改变，所以就算给了新值，但是和原来的类型和值没有变化的话也不会被监听到。
 ```
 
-<img src="vue.assets/image-20210822165606151.png" alt="image-20210822165606151" style="zoom:50%;" />
+<img src="images/image-20210822165606151.png" alt="image-20210822165606151" style="zoom:50%;" />
 
 ```
 注意点：
 传过来的值，需要有定义为string，因为input输入框为string类型，如果没有把string定义加上，那么就会在计算时类型对应不上报错，但是这里我是把msg赋值给了sonMsg，却报了msg问题，这里错误原因如下
 ```
 
-<img src="vue.assets/image-20210823095441472.png" alt="image-20210823095441472" style="zoom:25%;" />
+<img src="images/image-20210823095441472.png" alt="image-20210823095441472" style="zoom:25%;" />
 
 ```
 错误原因：
@@ -1614,7 +1605,7 @@ cpnClcik(item) {
 	然后又因为绑定的原因，所以会把msg传递给了son，但是子元素只允许传递number，所以就报错了。
 ```
 
-<img src="vue.assets/image-20210823094449658.png" alt="image-20210823094449658" style="zoom:33%;" />
+<img src="images/image-20210823094449658.png" alt="image-20210823094449658" style="zoom:33%;" />
 
 ```
 代码
@@ -1755,7 +1746,7 @@ $refs -> 对象类型，默认是个空的对象
 		console.log(this.$refs.aaa.name)
 ```
 
-<img src="vue.assets/image-20210823101313930.png" alt="image-20210823101313930" style="zoom:25%;" />
+<img src="images/image-20210823101313930.png" alt="image-20210823101313930" style="zoom:25%;" />
 
 #### 子访问父 parent root
 
@@ -1775,7 +1766,7 @@ $refs -> 对象类型，默认是个空的对象
 这里，如果，不加上div会报错
 ```
 
-<img src="vue.assets/image-20210822150717435.png" alt="image-20210822150717435" style="zoom:33%;" />
+<img src="images/image-20210822150717435.png" alt="image-20210822150717435" style="zoom:33%;" />
 
 ## 插槽 slot
 
@@ -2262,4 +2253,19 @@ dep.addSub(w1);
 ```
 
 # end
+
+## 参考
+
+```
+哔哩哔哩， coderwhy， BV15741177Eh
+```
+
+## 资料
+
+```
+unix编程艺术
+代码大全
+深入理解计算机原理
+现代操作系统
+```
 
