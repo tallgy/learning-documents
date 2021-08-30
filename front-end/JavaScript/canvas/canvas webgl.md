@@ -1,13 +1,5 @@
 # canvas webgl
 
-```
-study URL：
-API
-https://developer.mozilla.org/zh-CN/docs/Web/API/WebGL_API/Tutorial/Getting_started_with_WebGL
-```
-
-
-
 ## 开始
 
 ```
@@ -116,3 +108,12 @@ function loadShader(gl, type, source) {
 
 
 # end
+
+## 参考
+
+```
+study URL：
+API
+https://developer.mozilla.org/zh-CN/docs/Web/API/WebGL_API/Tutorial/Getting_started_with_WebGL
+```
+

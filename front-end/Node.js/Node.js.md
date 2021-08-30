@@ -1,23 +1,5 @@
 #  Node.js
 
-## 	学习资源
-
-```
-深入浅出Node.js	也有博客
-Node.js权威指南
-JavaScript标准参考教程(alpha) : http://javascript.ruanyifeng.com/
-Node入门: http://www.nodebeginner.org/index-zh-cn.html
-官方API文档: https://nodejs.org/dist/latest-v6.x/docs/api/
-中文文档(版本比较旧，凑合看) : http://www.nodeclass.com/api/node.html
-CNODE社区: http://cnodejs.org
-CNODE-新手入门: http://cnodejs.org/getstart
-
-npm网站
-npmjs.com
-```
-
-
-
 ## 介绍
 
 什么是nodejs
@@ -2768,3 +2750,28 @@ app.use(function (err, req, res, next) {
 
 
 # end
+
+## 参考
+
+```
+哔哩哔哩， 黑马，李鹏周， BV13T4y1A7qQ
+```
+
+
+
+## 学习资源
+
+```
+深入浅出Node.js	也有博客
+Node.js权威指南
+JavaScript标准参考教程(alpha) : http://javascript.ruanyifeng.com/
+Node入门: http://www.nodebeginner.org/index-zh-cn.html
+官方API文档: https://nodejs.org/dist/latest-v6.x/docs/api/
+中文文档(版本比较旧，凑合看) : http://www.nodeclass.com/api/node.html
+CNODE社区: http://cnodejs.org
+CNODE-新手入门: http://cnodejs.org/getstart
+
+npm网站
+npmjs.com
+```
+

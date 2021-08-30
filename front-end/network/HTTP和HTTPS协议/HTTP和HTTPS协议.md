@@ -295,3 +295,12 @@ TLS使用的是混合加密
 ```
 
 <img src="HTTP和HTTPS协议.assets/image-20210809224024677.png" alt="image-20210809224024677" style="zoom:50%;" />
+
+# end
+
+## 参考
+
+```
+哔哩哔哩， 图灵诸葛官方号， BV1V54y1y7c4
+```
+
