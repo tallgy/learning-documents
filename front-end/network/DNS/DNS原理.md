@@ -1,4 +1,4 @@
-# DNS原理
+# DNS原理1
 
 ## 概述
 
@@ -157,11 +157,58 @@ NS ( Name Server )记录是域名服务器记录,用来指定该域名由哪个D
 
  
 
+## 安装dns服务器
+
+模式: C/S 模式
+2、端口
+[root@xuegod64 ~]# vim /etc/services
+tcp/53	udp/53	#用于客户端查询。
+tcp/953	udp/953	#用于DNS主从同步s
+
+### 安装dns
+
+#### BIND简介。
+
+BIND全称为Berkeley Internet Name Domain(伯克利因特网名称域系统)。BIND 主要有3三个版本: BIND4、BIND8、BIND9。 
+BIND8融合了许多提高效率、稳定性和安全性的技术,而BIND9增加了-些超前的理念: IPv6支持、密钥加密、多处理器支持、线程安全操作、增量区传送等等。
+
+#### 其他的
+
+unbound包r7i7
+
+#### 安装bind
+
+```
+[root@xuegod63 ~ ]# rpm -vih /mnt/Packages/bind-9.8.2-0.17.rc1.el6_ 4.6.x86 64.rpm。#DNS服务的主程序包。
+
+[root@xuegod63 Packages]# rpm -ivh bind-chroot-9.7.3-8.P3.el6.x86_ _64.rpm # 提高安全性。
+
+#bind-chroot是bind的-个功能使bind可以在一个chroot 的模式下运行.也就是说,bind运行时的/ (根)目录,并不是系统真正的/(根)目录,只是系统中的一个子目录而已.这样做的目的是为了提高安全性.因为在chroot的模式下,bind可以访问的范围仅限于这个子目录的范围里，无法进一步提升,进入到系统的其他目
+录中..
+
+[root@xuegod63 Packages]# rpm -ivh bind-utils-9.7.3-8.P3.el6.x86_ 64.rpm #该包为客户端工具，默认安装,用于搜索域名指令。
+```
+
+#### DNS服务器相关配置文件
+
+```
+DNS服务器相关配置文件:。
+[root@xuegod63 Packages]# Is /etc/named.conf。
+/etc/named.conf。
+named.conf是BIND的核心配置文件,它包含了BIND的基本配置,但其并不包括区域数据。
+```
 
 
 
 
 
+# DNS原理2
+
+域名和ip绑定，dns就是通过域名查找ip
+
+对于qq可以访问，但是没有网络的情况，就是域名 设置错误，因为百度是通过域名进行的访问的ip，而qq是直接通过ip进行的 访问
+
+![image-20210830211956694](images/image-20210830211956694.png)
 
 
 
@@ -182,6 +229,7 @@ NS ( Name Server )记录是域名服务器记录,用来指定该域名由哪个D
 ## 参考
 
 ```
-哔哩哔哩， BV1GW411j7Ts
+哔哩哔哩， 学神， BV1GW411j7Ts
+哔哩哔哩， 恋雪喵， BV1F54y1R7BC
 ```
 
