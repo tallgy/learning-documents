@@ -1,5 +1,9 @@
 # 学习前端的几个阶段:
 
+## 学习路线
+
+![front-end study stages](README/front-end study stages.jpeg)
+
 
 
 ## 互联网如何运作
@@ -55,4 +59,11 @@
 
 
 # end
+
+## 参考
+
+```
+https://objtube.github.io/front-end-roadmap
+https://objtube.gitee.io/front-end-roadmap/#/
+```
 
