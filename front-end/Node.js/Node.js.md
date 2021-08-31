@@ -690,7 +690,7 @@ fs.readdir('D:/Movie/www', function (err, files) {
 但是响应块
 ```
 
-<img src="Node.js.assets/image-20210813104803640.png" alt="image-20210813104803640" style="zoom:50%;" />
+<img src="images/image-20210813104803640.png" alt="image-20210813104803640" style="zoom:50%;" />
 
 ##### 服务器端渲染
 
@@ -701,7 +701,7 @@ fs.readdir('D:/Movie/www', function (err, files) {
 不需要客户端进行处理
 ```
 
-<img src="Node.js.assets/image-20210813104946982.png" alt="image-20210813104946982" style="zoom:50%;" />
+<img src="images/image-20210813104946982.png" alt="image-20210813104946982" style="zoom:50%;" />
 
 ##### 如何查看是不是服务端渲染出来的
 
@@ -898,7 +898,7 @@ console.log(obj)
 console.log(obj.query)
 ```
 
-<img src="Node.js.assets/image-20210813155636994.png" alt="image-20210813155636994" style="zoom:50%;" />
+<img src="images/image-20210813155636994.png" alt="image-20210813155636994" style="zoom:50%;" />
 
 ### 使用302进行重定向
 
@@ -1157,7 +1157,7 @@ b.js
 //      can not find module xxx
 ```
 
-<img src="Node.js.assets/image-20210813213351516.png" alt="image-20210813213351516" style="zoom:50%;" />
+<img src="images/image-20210813213351516.png" alt="image-20210813213351516" style="zoom:50%;" />
 
 ```
 // 注意：我们一个项目有且只有一个 node_modules，放在项目根目录中，这样的话项目中所有的子目录中的代码都可以加载到第三方包
@@ -1184,7 +1184,7 @@ b.js
 npm init自动初始化出来
 ```
 
-<img src="Node.js.assets/image-20210814102006932.png" alt="image-20210814102006932" style="zoom:50%;" />
+<img src="images/image-20210814102006932.png" alt="image-20210814102006932" style="zoom:50%;" />
 
 ```
 npm install --save art-template
@@ -1194,7 +1194,7 @@ npm install --save art-template
 package.json dependencies 选项保存第三方包依赖信息
 ```
 
-<img src="Node.js.assets/image-20210814102106190.png" alt="image-20210814102106190" style="zoom:33%;" />
+<img src="images/image-20210814102106190.png" alt="image-20210814102106190" style="zoom:33%;" />
 
 ```
 这个时候，可以通过
@@ -1325,7 +1325,7 @@ app.listen(3000, function () {
 路由表
 ```
 
-<img src="Node.js.assets/image-20210814163250351.png" alt="image-20210814163250351" style="zoom:33%;" />
+<img src="images/image-20210814163250351.png" alt="image-20210814163250351" style="zoom:33%;" />
 
 get
 
@@ -1356,7 +1356,7 @@ res.json({
 
 #### 静态服务
 
-<img src="Node.js.assets/image-20210814163514426.png" alt="image-20210814163514426" style="zoom:50%;" />
+<img src="images/image-20210814163514426.png" alt="image-20210814163514426" style="zoom:50%;" />
 
 ```
 // 当以 /public/ 开头的时候，去 ./public/ 目录中找找对应的资源
@@ -1412,7 +1412,7 @@ app.get('/', function (req, res) {
 })
 ```
 
-<img src="Node.js.assets/image-20210814200753845.png" alt="image-20210814200753845" style="zoom:60%;" />
+<img src="images/image-20210814200753845.png" alt="image-20210814200753845" style="zoom:60%;" />
 
 ```
 // 如果想要修改默认的 views 目录，则可以
@@ -1593,9 +1593,9 @@ app.listen(3000, function () {
 如果在读取路径上使用的是 / 开头，就会从根目录进行寻找
 ```
 
-<img src="Node.js.assets/image-20210814154605404.png" alt="image-20210814154605404" style="zoom:50%;" />
+<img src="images/image-20210814154605404.png" alt="image-20210814154605404" style="zoom:50%;" />
 
-<img src="Node.js.assets/image-20210814154624695.png" alt="image-20210814154624695" style="zoom:50%;" />
+<img src="images/image-20210814154624695.png" alt="image-20210814154624695" style="zoom:50%;" />
 
 ### 路由封装
 
@@ -1928,7 +1928,7 @@ lock 可以用来锁定版本
 所以我们希望可以锁定版本1.1.1，这个lock的文件就可以防止自动升级新版
 ```
 
-<img src="Node.js.assets/image-20210816213801488.png" alt="image-20210816213801488" style="zoom:50%;" />
+<img src="images/image-20210816213801488.png" alt="image-20210816213801488" style="zoom:50%;" />
 
 ### Express处理404
 
@@ -1987,9 +1987,9 @@ app.use(function (req, res) {
 输入 mongod --version
 ```
 
-<img src="Node.js.assets/image-20210816223400549.png" alt="image-20210816223400549" style="zoom:50%;" />
+<img src="images/image-20210816223400549.png" alt="image-20210816223400549" style="zoom:50%;" />
 
-<img src="Node.js.assets/image-20210816223504321.png" alt="image-20210816223504321" style="zoom:33%;" />
+<img src="images/image-20210816223504321.png" alt="image-20210816223504321" style="zoom:33%;" />
 
 ### 启动或者关闭数据库
 
@@ -2045,7 +2045,7 @@ db.students.find()
 	查询所有students集合所有的值
 ```
 
-<img src="Node.js.assets/image-20210817134800365.png" alt="image-20210817134800365" style="zoom:50%;" />
+<img src="images/image-20210817134800365.png" alt="image-20210817134800365" style="zoom:50%;" />
 
 ### Node中如何操作 MongoDB
 
@@ -2283,7 +2283,7 @@ callback hell
 异步里面又套了一个异步
 ```
 
-<img src="Node.js.assets/image-20210817160742577.png" alt="image-20210817160742577" style="zoom:33%;" />
+<img src="images/image-20210817160742577.png" alt="image-20210817160742577" style="zoom:33%;" />
 
 ```
 这里因为读取文件是一个异步操作，所以我们不能够保证每次输出文件的顺序相同
@@ -2318,7 +2318,7 @@ es6中新增了api，`promise`
 
 Promise本身不是异步，但是内部往往都是封装一个异步
 
-<img src="Node.js.assets/image-20210817161916229.png" alt="image-20210817161916229" style="zoom:50%;" />
+<img src="images/image-20210817161916229.png" alt="image-20210817161916229" style="zoom:50%;" />
 
 ```
 在ES6中新增了一个 api promise
@@ -2537,7 +2537,7 @@ __filename
 __dirname 和 __filename 不会受到文件执行命令所属路径所影响
 ```
 
-<img src="Node.js.assets/image-20210818133242669.png" alt="image-20210818133242669" style="zoom:50%;" />
+<img src="images/image-20210818133242669.png" alt="image-20210818133242669" style="zoom:50%;" />
 
 ### 路径问题
 
@@ -2554,11 +2554,11 @@ fs.readFile('./a.txt')
 所以为了解决这个问题，就把相对路径变为绝对路径就可以了
 ```
 
-<img src="Node.js.assets/image-20210818133553458.png" alt="image-20210818133553458" style="zoom:33%;" />
+<img src="images/image-20210818133553458.png" alt="image-20210818133553458" style="zoom:33%;" />
 
-<img src="Node.js.assets/image-20210818133627840.png" alt="image-20210818133627840" style="zoom:50%;" />
+<img src="images/image-20210818133627840.png" alt="image-20210818133627840" style="zoom:50%;" />
 
-<img src="Node.js.assets/image-20210818133651180.png" alt="image-20210818133651180" style="zoom:50%;" />
+<img src="images/image-20210818133651180.png" alt="image-20210818133651180" style="zoom:50%;" />
 
 ```
 可以看到，在foo里面执行，不会报错，

@@ -26,7 +26,7 @@ git remote set-url --add origin https://xxx
 也是可以的
 ```
 
-![image-20210806111127594](Git操作.assets\image-20210806111127594.png)
+![image-20210806111127594](images\image-20210806111127594.png)
 
 
 

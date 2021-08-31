@@ -6,7 +6,7 @@
 OSI网络参考模型和TCP/IP模型
 ```
 
-<img src="HTTP和HTTPS协议.assets/image-20210809200601143.png" alt="image-20210809200601143" style="zoom:50%;" />
+<img src="images/image-20210809200601143.png" alt="image-20210809200601143" style="zoom:50%;" />
 
 ```
 过程：
@@ -26,7 +26,7 @@ OSI网络参考模型和TCP/IP模型
 服务器的响应报文同上
 ```
 
-<img src="HTTP和HTTPS协议.assets/image-20210809202544187.png" alt="image-20210809202544187" style="zoom:50%;" />
+<img src="images/image-20210809202544187.png" alt="image-20210809202544187" style="zoom:50%;" />
 
 
 
@@ -54,35 +54,35 @@ OSI网络参考模型和TCP/IP模型
 
 ### 		1.http报文格式
 
-<img src="HTTP和HTTPS协议.assets/image-20210809202819014.png" alt="image-20210809202819014" style="zoom:33%;" />
+<img src="images/image-20210809202819014.png" alt="image-20210809202819014" style="zoom:33%;" />
 
 
 
 ### 		2.请求行报文格式
 
-<img src="HTTP和HTTPS协议.assets/image-20210809202900735.png" alt="image-20210809202900735" style="zoom:33%;" />
+<img src="images/image-20210809202900735.png" alt="image-20210809202900735" style="zoom:33%;" />
 
 
 
 ### 				3.响应行报文格式
 
-<img src="HTTP和HTTPS协议.assets/image-20210809202951681.png" alt="image-20210809202951681" style="zoom:33%;" />
+<img src="images/image-20210809202951681.png" alt="image-20210809202951681" style="zoom:33%;" />
 
 
 
 ### 		4.HTTP头字段
 
-<img src="HTTP和HTTPS协议.assets/image-20210809203120421.png" alt="image-20210809203120421" style="zoom:33%;" />
+<img src="images/image-20210809203120421.png" alt="image-20210809203120421" style="zoom:33%;" />
 
 头字段注意事项
 
-<img src="HTTP和HTTPS协议.assets/image-20210809203215214.png" alt="image-20210809203215214" style="zoom:33%;" />
+<img src="images/image-20210809203215214.png" alt="image-20210809203215214" style="zoom:33%;" />
 
 
 
 ## 	3.HTTP请求完整过程
 
-![image-20210809203459750](HTTP和HTTPS协议.assets/image-20210809203459750.png)
+![image-20210809203459750](images/image-20210809203459750.png)
 
 
 
@@ -112,13 +112,13 @@ OSI网络参考模型和TCP/IP模型
 
 ### 		3.TCP报文内容
 
-<img src="HTTP和HTTPS协议.assets/image-20210809205009537.png" alt="image-20210809205009537" style="zoom: 50%;" />
+<img src="images/image-20210809205009537.png" alt="image-20210809205009537" style="zoom: 50%;" />
 
 
 
 ### 		4.TCP三次握手
 
-<img src="HTTP和HTTPS协议.assets/image-20210809205528572.png" alt="image-20210809205528572" style="zoom: 50%;" />
+<img src="images/image-20210809205528572.png" alt="image-20210809205528572" style="zoom: 50%;" />
 
 ```
 客户端创建一个数据结构存储信息，然后发送同步请求，进入syn.sent状态
@@ -130,7 +130,7 @@ OSI网络参考模型和TCP/IP模型
 
 此时操作系统内核的变化
 
-<img src="HTTP和HTTPS协议.assets/image-20210809210129216.png" alt="image-20210809210129216" style="zoom:50%;" />
+<img src="images/image-20210809210129216.png" alt="image-20210809210129216" style="zoom:50%;" />
 
 
 
@@ -155,7 +155,7 @@ A:等待2MSL后释放连接
 2.防止滞留在网络中的报文，对新建立的连接造成数据扰乱
 ```
 
-<img src="HTTP和HTTPS协议.assets/image-20210809210401767.png" alt="image-20210809210401767" style="zoom:50%;" />
+<img src="images/image-20210809210401767.png" alt="image-20210809210401767" style="zoom:50%;" />
 
 
 
@@ -193,7 +193,7 @@ MSS: Max Segment Size,默认536byte实际数据
 滑动窗口大小通过TCP三次握手和对端写上，且受网络状况影响
 ```
 
-<img src="HTTP和HTTPS协议.assets/image-20210809212623617.png" alt="image-20210809212623617" style="zoom:50%;" />
+<img src="images/image-20210809212623617.png" alt="image-20210809212623617" style="zoom:50%;" />
 
 
 
@@ -206,7 +206,7 @@ MSS: Max Segment Size,默认536byte实际数据
 使用HTTPS时，所有的HTTP请求和响应在发送到网络之前，都要进行加密。
 ```
 
-<img src="HTTP和HTTPS协议.assets/image-20210809222623510.png" alt="image-20210809222623510" style="zoom:50%;" />
+<img src="images/image-20210809222623510.png" alt="image-20210809222623510" style="zoom:50%;" />
 
 ```
 以前是通过socket，直接和TCP进行交互
@@ -228,7 +228,7 @@ SSL即安全套接层(Secure Sockets Layer)， 由网景公司于1994年发明�
 md5算法(sha1,sha2...)
 ```
 
-<img src="HTTP和HTTPS协议.assets/image-20210809223728754.png" alt="image-20210809223728754" style="zoom:50%;" />
+<img src="images/image-20210809223728754.png" alt="image-20210809223728754" style="zoom:50%;" />
 
 ```
 对称加密
@@ -236,14 +236,14 @@ md5算法(sha1,sha2...)
 对称密钥加密算法:编、解码使用相同密钥的算法，如(AES,RC4,ChaCha20 )。
 ```
 
-<img src="HTTP和HTTPS协议.assets/image-20210809223752057.png" alt="image-20210809223752057" style="zoom:50%;" />
+<img src="images/image-20210809223752057.png" alt="image-20210809223752057" style="zoom:50%;" />
 
 ```
 非对称加密
 非对称密钥加密算法:它有两个密钥，一个叫“公钥”，-个叫“私钥”。两个密钥是不同的，公钥可以公开给任何人使用，而私钥必须严格保密。非对称加密可以解决“密钥交换"的问题。网站秘密保管私钥，在网上任意分发公钥,你想要登录网站只要用公钥加密就行了，密文只能由私钥持有者才能解密。而黑客因为没有私钥，所以就无法破解密文。非对称密钥加密系统通常需要大量的数学运算,比较慢。如(DH、DSA、RSA、 ECC )
 ```
 
-<img src="HTTP和HTTPS协议.assets/image-20210809223812108.png" alt="image-20210809223812108" style="zoom:50%;" />
+<img src="images/image-20210809223812108.png" alt="image-20210809223812108" style="zoom:50%;" />
 
 
 
@@ -294,7 +294,7 @@ TLS使用的是混合加密
 然后使用对称加密算法进行传输
 ```
 
-<img src="HTTP和HTTPS协议.assets/image-20210809224024677.png" alt="image-20210809224024677" style="zoom:50%;" />
+<img src="images/image-20210809224024677.png" alt="image-20210809224024677" style="zoom:50%;" />
 
 # end
 

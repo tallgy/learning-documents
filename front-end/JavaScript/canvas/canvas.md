@@ -115,7 +115,7 @@ function Rect() {
 }
 ```
 
-<img src="canvas.assets/image-20210811101853826.png" alt="image-20210811101853826" style="zoom:25%;" />
+<img src="images/image-20210811101853826.png" alt="image-20210811101853826" style="zoom:25%;" />
 
 
 
@@ -141,7 +141,7 @@ function Line() {
 }
 ```
 
-<img src="canvas.assets/image-20210811102053067.png" alt="image-20210811102053067" style="zoom:25%;" />
+<img src="images/image-20210811102053067.png" alt="image-20210811102053067" style="zoom:25%;" />
 
 
 
@@ -155,7 +155,7 @@ function Circle() {
 }
 ```
 
-<img src="canvas.assets/image-20210811102222010.png" alt="image-20210811102222010" style="zoom:25%;" />
+<img src="images/image-20210811102222010.png" alt="image-20210811102222010" style="zoom:25%;" />
 
 
 
@@ -184,7 +184,7 @@ function Text() {
 }
 ```
 
-<img src="canvas.assets/image-20210811102838796.png" alt="image-20210811102838796" style="zoom:25%;" />
+<img src="images/image-20210811102838796.png" alt="image-20210811102838796" style="zoom:25%;" />
 
 
 
@@ -231,7 +231,7 @@ function Img() {
 }
 ```
 
-<img src="canvas.assets/image-20210811103055937.png" alt="image-20210811103055937" style="zoom:25%;" />
+<img src="images/image-20210811103055937.png" alt="image-20210811103055937" style="zoom:25%;" />
 
 
 
@@ -459,7 +459,7 @@ function drawC() {
 }
 ```
 
-<img src="canvas.assets/image-20210811103339179.png" alt="image-20210811103339179" style="zoom:25%;" />
+<img src="images/image-20210811103339179.png" alt="image-20210811103339179" style="zoom:25%;" />
 
 
 
@@ -529,7 +529,7 @@ setInterval(function () {
 }, 16);
 ```
 
-<img src="canvas.assets/image-20210811164429655.png" alt="image-20210811164429655" style="zoom:25%;" />
+<img src="images/image-20210811164429655.png" alt="image-20210811164429655" style="zoom:25%;" />
 
 
 

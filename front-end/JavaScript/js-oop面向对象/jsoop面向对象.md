@@ -993,7 +993,7 @@ var c1 = Object.create(p);
 var c2 = Object.create(p, {age: 1});
 ```
 
-![image-20210808111153418](jsoop面向对象.assets/image-20210808111153418.png)
+![image-20210808111153418](images/image-20210808111153418.png)
 
 ```
 var ff = new FF();
@@ -1012,9 +1012,9 @@ FF.prototype的__proto__ 指向了 Object.prototype的指向
 对象的构造器的原型的构造器 指向的是 对象的构造器
 ```
 
-![image-20210808112300231](jsoop面向对象.assets/image-20210808112300231.png)
+![image-20210808112300231](images/image-20210808112300231.png)
 
-### 	![290701352241158](jsoop面向对象.assets/290701352241158.jpg)
+### 	![290701352241158](images/290701352241158.jpg)
 
 ### 2.常用属性
 

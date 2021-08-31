@@ -35,9 +35,9 @@ http协议的工作流程
 4.断开连接
 ```
 
-![image-20210809130747646](HTTP协议详解.assets/image-20210809130747646.png)
+![image-20210809130747646](images/image-20210809130747646.png)
 
-![image-20210809130801471](HTTP协议详解.assets/image-20210809130801471.png)
+![image-20210809130801471](images/image-20210809130801471.png)
 
 
 
@@ -81,7 +81,7 @@ Host: localhost
 
 #### 		1.get请求部分
 
-<img src="HTTP协议详解.assets/image-20210809132250488.png" alt="image-20210809132250488" style="zoom:50%;" />
+<img src="images/image-20210809132250488.png" alt="image-20210809132250488" style="zoom:50%;" />
 
 ```
 1.get 就是请求方法 method
@@ -94,7 +94,7 @@ Host: localhost
 
 响应部分
 
-![image-20210809132724218](HTTP协议详解.assets/image-20210809132724218.png)
+![image-20210809132724218](images/image-20210809132724218.png)
 
 ```
 响应行：协议版本 状态码 状态文字
@@ -108,7 +108,7 @@ hello
 
 #### 		2.post请求部分
 
-<img src="HTTP协议详解.assets/image-20210809134043602.png" alt="image-20210809134043602" style="zoom:50%;" />
+<img src="images/image-20210809134043602.png" alt="image-20210809134043602" style="zoom:50%;" />
 
 ```
 POST /0606/02.php HTTP/1.1
@@ -131,7 +131,7 @@ a=3&age=28
 
 ### 	3.http协议3部分介绍
 
-![image-20210809135613952](HTTP协议详解.assets/image-20210809135613952.png)
+![image-20210809135613952](images/image-20210809135613952.png)
 
 #### 		1.请求
 
@@ -149,7 +149,7 @@ options：返回服务器能用的请求方法
 
 options
 
-![image-20210809140323119](HTTP协议详解.assets/image-20210809140323119.png)
+![image-20210809140323119](images/image-20210809140323119.png)
 
 #### 		2.响应
 
@@ -207,7 +207,7 @@ header('Location: xxxxxx', true, 307);
 当我们在网页引用站外图片，常会出现
 ```
 
-<img src="HTTP协议详解.assets/image-20210809144339730.png" alt="image-20210809144339730" style="zoom:50%;" />
+<img src="images/image-20210809144339730.png" alt="image-20210809144339730" style="zoom:50%;" />
 
 ```
 referer
@@ -245,7 +245,7 @@ RewriteRule .* no.png
 
 #### 		2.反防盗链
 
-![image-20210809152454022](HTTP协议详解.assets/image-20210809152454022.png)
+![image-20210809152454022](images/image-20210809152454022.png)
 
 
 
@@ -264,15 +264,15 @@ RewriteRule .* no.png
 
 第一次请求头
 
-<img src="HTTP协议详解.assets/image-20210809153813312.png" alt="image-20210809153813312" style="zoom:33%;" />
+<img src="images/image-20210809153813312.png" alt="image-20210809153813312" style="zoom:33%;" />
 
 第一次响应头
 
-<img src="HTTP协议详解.assets/image-20210809153850178.png" alt="image-20210809153850178" style="zoom:33%;" />
+<img src="images/image-20210809153850178.png" alt="image-20210809153850178" style="zoom:33%;" />
 
 第二次请求头
 
-<img src="HTTP协议详解.assets/image-20210809153921951.png" alt="image-20210809153921951" style="zoom:33%;" />
+<img src="images/image-20210809153921951.png" alt="image-20210809153921951" style="zoom:33%;" />
 
 ```
 if-Modified-Since意思是，如果在这个时间点后修改过，则重新请求，如果图片的etag值和if-None-Match的值不匹配，则重新请求
@@ -280,7 +280,7 @@ if-Modified-Since意思是，如果在这个时间点后修改过，则重新请
 
 第二次响应头，304
 
-<img src="HTTP协议详解.assets/image-20210809154002096.png" alt="image-20210809154002096" style="zoom:33%;" />
+<img src="images/image-20210809154002096.png" alt="image-20210809154002096" style="zoom:33%;" />
 
 #### 1.设置缓存控制
 
@@ -310,7 +310,7 @@ Type: 时间单位
 
 实例
 
-<img src="HTTP协议详解.assets/image-20210809155151638.png" alt="image-20210809155151638" style="zoom:50%;" />
+<img src="images/image-20210809155151638.png" alt="image-20210809155151638" style="zoom:50%;" />
 
 
 
@@ -323,7 +323,7 @@ Cache-Control: no-store, must-revalidate;
 可以利用apache的header模块
 ```
 
-<img src="HTTP协议详解.assets/image-20210809155737470.png" alt="image-20210809155737470" style="zoom: 50%;" />
+<img src="images/image-20210809155737470.png" alt="image-20210809155737470" style="zoom: 50%;" />
 
 
 
@@ -338,7 +338,7 @@ gzip压缩，deflate压缩，comporess压缩以及google chrome的sdch压缩
 
 #### 		1.压缩过程
 
-![image-20210809160343947](HTTP协议详解.assets/image-20210809160343947.png)
+![image-20210809160343947](images/image-20210809160343947.png)
 
 
 
@@ -349,13 +349,13 @@ gzip压缩，deflate压缩，comporess压缩以及google chrome的sdch压缩
 2.在conf文件中，写
 ```
 
-<img src="HTTP协议详解.assets/image-20210809160553620.png" alt="image-20210809160553620" style="zoom:50%;" />
+<img src="images/image-20210809160553620.png" alt="image-20210809160553620" style="zoom:50%;" />
 
 ```
 这里指定文件类型压缩的原因，1.压缩消耗CPU资源，并且有的压缩效果不好（图片/视频），一般指定文本压缩
 ```
 
-<img src="HTTP协议详解.assets/image-20210809160910179.png" alt="image-20210809160910179" style="zoom:50%;" />
+<img src="images/image-20210809160910179.png" alt="image-20210809160910179" style="zoom:50%;" />
 
 ```
 客户端会发送一个带有支持压缩格式的请求头
@@ -394,7 +394,7 @@ http协议与持久链接+分块传输 -->	反向Ajax
 
 代码截图
 
-<img src="HTTP协议详解.assets/image-20210809163252009.png" alt="image-20210809163252009" style="zoom:50%;" />
+<img src="images/image-20210809163252009.png" alt="image-20210809163252009" style="zoom:50%;" />
 
 # end
 

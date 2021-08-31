@@ -2,7 +2,7 @@
 
 ## 	1.tcp/ip在开发中的作用
 
-<img src="TCP IP.assets/image-20210809195012577.png" alt="image-20210809195012577" style="zoom:50%;" />
+<img src="images/image-20210809195012577.png" alt="image-20210809195012577" style="zoom:50%;" />
 
 
 
