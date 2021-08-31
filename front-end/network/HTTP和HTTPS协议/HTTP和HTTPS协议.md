@@ -54,13 +54,13 @@ OSI网络参考模型和TCP/IP模型
 
 ### 		1.http报文格式
 
-<img src="images/image-20210809202819014.png" alt="image-20210809202819014" style="zoom:33%;" />
+<img src="images/image-20210809202819014.png" alt="image-20210809202819014"/>
 
 
 
 ### 		2.请求行报文格式
 
-<img src="images/image-20210809202900735.png" alt="image-20210809202900735" style="zoom:33%;" />
+<img src="images/image-20210809202900735.png" alt="image-20210809202900735" style="zoom:100%;" />
 
 
 
