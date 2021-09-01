@@ -188,6 +188,75 @@ const names = [1, 2];
 const [n1, n2] = names;
 ```
 
+## 箭头函数
+
+```
+一般很少使用，一般是把函数作为一个参数的时候使用的才比较多
+
+h => h(App)
+
+function(h) {
+	return h(App)
+}
+```
+
+### 基本使用
+
+```
+定义函数的方式
+const a = function() {}
+const o = {
+	b() {}
+	c: function() {}
+}
+箭头函数
+const c = (参数列表) => {}
+const c = () => {
+	
+}
+```
+
+### 参数和返回值
+
+```
+(n1, n2) => {
+	return n1 + n2;
+}
+(n1, n2) => n1+n2
+
+n => { return n*n }
+
+() => {
+	
+}
+```
+
+### this指向
+
+```
+箭头函数中的this引用的就是最近作用域中的this
+箭头函数的this是向外层作用域中，一层层查找this，直到有this的定义
+
+const o = {
+	a() {
+		function.call(window)，这里面，在调用的时候，会通过call，
+		setTimeout(function() {
+			this.log	window
+		}, 1000)
+		
+		this.log
+		
+		setTimeout(() => {
+			this.log	o对象
+		}, 1000)
+	}
+}
+```
+
+```
+ 
+```
+
 
 
 
