@@ -112,13 +112,13 @@ OSI网络参考模型和TCP/IP模型
 
 ### 		3.TCP报文内容
 
-<img src="images/image-20210809205009537.png" alt="image-20210809205009537" style="zoom: 50%;" />
+<img src="images/image-20210809205009537.png" alt="image-20210809205009537" style="zoom: 67%;" />
 
 
 
 ### 		4.TCP三次握手
 
-<img src="images/image-20210809205528572.png" alt="image-20210809205528572" style="zoom: 50%;" />
+<img src="images/image-20210809205528572.png" alt="image-20210809205528572" style="zoom: 67%;" />
 
 ```
 客户端创建一个数据结构存储信息，然后发送同步请求，进入syn.sent状态
@@ -130,7 +130,7 @@ OSI网络参考模型和TCP/IP模型
 
 此时操作系统内核的变化
 
-<img src="images/image-20210809210129216.png" alt="image-20210809210129216" style="zoom:50%;" />
+<img src="images/image-20210809210129216.png" alt="image-20210809210129216" style="zoom:67%;" />
 
 
 
@@ -155,7 +155,7 @@ A:等待2MSL后释放连接
 2.防止滞留在网络中的报文，对新建立的连接造成数据扰乱
 ```
 
-<img src="images/image-20210809210401767.png" alt="image-20210809210401767" style="zoom:50%;" />
+<img src="images/image-20210809210401767.png" alt="image-20210809210401767" style="zoom:100%;" />
 
 
 
