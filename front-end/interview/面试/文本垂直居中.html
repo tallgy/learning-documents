@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    .p {
+      width: 300px;
+      height: 200px;
+      background-color: red;
+      margin: 40px;
+    }
+
+    /*methods one
+    使用vertical-align
+    需要inline-block*/
+    #p1:before {
+      content: '';
+      height: 100%;
+      width: 0;
+      vertical-align: middle;
+      display: inline-block;
+    }
+
+    /*methods two
+    行高，只能一行的*/
+    .c2 {
+      line-height: 200px;
+    }
+
+    /*methods three
+    使用transform
+    搭配自绝父相*/
+    #p3 {
+      position: relative;
+    }
+    .c3 {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    /*methods four
+    使用flex布局
+    运用了
+      align-items: center;
+      align-self: center;*/
+    #p4 {
+      display: flex;
+      /*align-items: center;*/
+    }
+    .c4 {
+      align-self: center;
+    }
+
+    /*methods five
+    使用定位，然后在四周为0， 加上margin
+    需要子元素存在宽高*/
+    #p5 {
+      position: relative;
+    }
+    .c5 {
+      /*width: 40px;*/
+      height: 40px;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      /*left: 0;*/
+      /*right: 0;*/
+      margin: auto 0;
+    }
+
+
+  </style>
+</head>
+<body>
+
+<div class="p" id="p1">
+  <span class="c1">123465</span>
+</div>
+
+<div class="p" id="p2">
+  <span class="c2">123456</span>
+</div>
+
+<div class="p" id="p3">
+  <span class="c3">321654</span>
+</div>
+
+<div class="p" id="p4">
+  <span class="c4">123456</span>
+</div>
+
+<div class="p" id="p5">
+<!--  <span class="c5">123456</span>-->
+  <div class="c5">123456</div>
+</div>
+
+</body>
+</html>

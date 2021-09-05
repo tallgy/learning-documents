@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    .p {
+      width: 500px;
+      height: 400px;
+      background-color: red;
+      margin: 30px;
+    }
+
+    .c {
+      width: 200px;
+      height: 150px;
+      background-color: blue;
+    }
+
+    /*methods one*/
+    #p1:before {
+      content: '';
+      height: 100%;
+      width: 0;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    #c1 {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    /*methods two*/
+    #p2 {
+      display: flex;
+      /*align-items: center;*/
+    }
+    #c2 {
+      align-self: center;
+    }
+
+    /*methods three*/
+    #p3 {
+      position: relative;
+    }
+    #c3 {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  </style>
+</head>
+<body>
+
+<div class="p" id="p1">
+  <div class="c" id="c1"></div>
+</div>
+
+<div class="p" id="p2">
+  <div class="c" id="c2"></div>
+</div>
+
+<div class="p" id="p3">
+  <div class="c" id="c3"></div>
+</div>
+
+</body>
+</html>
