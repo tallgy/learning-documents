@@ -400,7 +400,7 @@ diabled
 
 
 
-## 计算属性 components
+## 计算属性 computed
 
 ```
 有缓存，效率高
