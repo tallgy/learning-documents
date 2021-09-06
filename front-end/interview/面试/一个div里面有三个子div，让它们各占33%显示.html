@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    .d {
+      width: 600px;
+      height: 300px;
+      background-color: black;
+      margin: 40px;
+    }
+    .d1 {
+      background-color: red;
+    }
+    .d2 {
+      background-color: blue;
+    }
+    .d3 {
+      background-color: skyblue;
+    }
+
+    #d1 {
+      display: flex;
+    }
+    #d11, #d12, #d13 {
+      flex: 1;
+    }
+
+    #d21, #d22, #d23 {
+      float: left;
+      width: 33.33%;
+      height: 100%;
+    }
+
+  </style>
+</head>
+<body>
+<div class="d" id="d1">
+  <div class="d1" id="d11"></div>
+  <div class="d2" id="d12"></div>
+  <div class="d3" id="d13"></div>
+</div>
+
+
+<div class="d" id="d2">
+  <div class="d1" id="d21"></div>
+  <div class="d2" id="d22"></div>
+  <div class="d3" id="d23"></div>
+</div>
+</body>
+</html>

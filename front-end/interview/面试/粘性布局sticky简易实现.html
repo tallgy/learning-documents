@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      height: 500vh;
+    }
+
+    div {
+      position: relative;
+      top: 400px;
+      width: 300px;
+      height: 300px;
+      background-color: red;
+    }
+
+    .sticky {
+      position: fixed;
+      top: 0;
+    }
+  </style>
+</head>
+<body>
+<div id="d"></div>
+
+<script>
+  const div = document.getElementById('d');
+
+  const sticky = (dom) => {
+    // 外层闭包
+    const originOffsetY = dom.offsetTop;
+    const refresh = debounce(judge, 16);
+
+    // 事件监听
+    window.addEventListener('scroll', () => {
+      refresh(dom);
+    });
+
+    // 判断逻辑函数
+    function judge(dom) {
+      window.scrollY >= originOffsetY
+          ? dom.classList.add('sticky')
+          : dom.classList.remove('sticky');
+    }
+
+    // 防抖节流
+    function debounce(func, delay) {
+      let timer = null;
+
+      return function (...args) {
+        timer && clearTimeout(timer);
+
+        timer = setTimeout(() => {
+          func.apply(this, args);
+        }, delay);
+      }
+    }
+  };
+
+  sticky(div);
+</script>
+</body>
+</html>
