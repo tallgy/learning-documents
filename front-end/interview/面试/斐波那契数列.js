@@ -15,6 +15,7 @@ function fibonacci(n) {
     result = vPro + vNext;
   }
 
+  console.log(result);
   return result;
 }
 
@@ -34,4 +35,6 @@ function getEfficiency(callback) {
   callback();
   const nextTime = Date.now();
   return nextTime - proTime;
-}(getEfficiency(() => fibonacci1(40)));
+}
+
+console.log((getEfficiency(() => fibonacci(40))));
