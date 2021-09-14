@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    div {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    input {
+      display: none;
+    }
+
+    label {
+      display: block;
+      width: 200px;
+      height: 200px;
+      background-color: red;
+      transition: all .5s;
+    }
+
+    input:checked ~ label {
+      width: 400px;
+      height: 400px;
+      transform: rotateZ(360deg);
+    }
+  </style>
+</head>
+<body>
+
+<div>
+  <input type="checkbox" name="" id="check">
+
+  <label for="check"></label>
+</div>
+
+</body>
+</html>
