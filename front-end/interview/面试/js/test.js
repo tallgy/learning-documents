@@ -25,23 +25,29 @@
 // }
 
 
-// 定义一个动物类
-function Animal (name) {
-  // 属性
-  this.name = name || 'Animal';
-  // 实例方法
-  this.sleep = function(){
-    console.log(this.name + '正在睡觉！');
+
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var missingNumber = function(nums) {
+  let low = 0,
+      high = nums.length;
+
+  while (low <= high) {
+    let mid = (low+high) >> 1;
+
+    if (mid === nums[mid]) {
+      low = mid + 1;
+    } else {
+      high = mid - 1;
+    }
   }
-}
-// 原型方法
-Animal.prototype.eat = function(food) {
-  console.log(this.name + '正在吃：' + food);
+
+  return low;
 };
 
 
-function Cat(){
-  this.age = 1;
-}
-Cat.prototype = new Animal();
-Cat.prototype.name = 'cat';
+
+console.log(missingNumber([0]));
