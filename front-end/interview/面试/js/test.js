@@ -26,28 +26,17 @@
 
 
 
+// /**
+//  * @param {number[][]} intervals
+//  * @return {number[][]}
+//  */
+// var merge = function(intervals) {
+//   intervals.sort((a, b) => {
+//     return a[0] - b[0];
+//   })
+//
+//   console.log(intervals);
+// };
+//
+// merge([[1,3],[2,6],[15,18],[8,10]]);
 
-/**
- * @param {number[]} nums
- * @return {number}
- */
-var missingNumber = function(nums) {
-  let low = 0,
-      high = nums.length;
-
-  while (low <= high) {
-    let mid = (low+high) >> 1;
-
-    if (mid === nums[mid]) {
-      low = mid + 1;
-    } else {
-      high = mid - 1;
-    }
-  }
-
-  return low;
-};
-
-
-
-console.log(missingNumber([0]));

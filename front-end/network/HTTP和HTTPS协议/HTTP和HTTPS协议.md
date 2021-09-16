@@ -26,7 +26,7 @@ OSI网络参考模型和TCP/IP模型
 服务器的响应报文同上
 ```
 
-<img src="images/image-20210809202544187.png" alt="image-20210809202544187" style="zoom:50%;" />
+<img src="images/image-20210809202544187.png" alt="image-20210809202544187"  />
 
 
 
@@ -233,7 +233,7 @@ md5算法(sha1,sha2...)
 ```
 对称加密
 (经典的异或实现)
-对称密钥加密算法:编、解码使用相同密钥的算法，如(AES,RC4,ChaCha20 )。
+对称密钥加密算法:编、解码使用相同密钥的算法，如(AES,RC4,ChaCha20)。
 ```
 
 <img src="images/image-20210809223752057.png" alt="image-20210809223752057" style="zoom:50%;" />
@@ -294,7 +294,7 @@ TLS使用的是混合加密
 然后使用对称加密算法进行传输
 ```
 
-<img src="images/image-20210809224024677.png" alt="image-20210809224024677" style="zoom:50%;" />
+<img src="images/image-20210809224024677.png" alt="image-20210809224024677"  />
 
 # end
 
