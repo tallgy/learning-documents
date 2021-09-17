@@ -1,42 +1,37 @@
-// const readline = require('readline');
-// const rl = readline.createInterface({
-//   input: process.stdin,
-//   output: process.stdout
-// });
-//
-// const strArr = [];
-// rl.on('line', (input) => {
-//   const arr = input.split(',');
-//   arr[0] = arr[0].slice(1, -1);
-//   strArr.push(arr[0]);
-//   strArr.push(arr[1]);
-//   dealStr(strArr);
-//   rl.close();
-// })
-//
-//
-// function dealStr(strArr) {
-//   const str = strArr[0];
-//   const k = strArr[1];
-//
-//   for (let i = 0; i < str.length - k; i++) {
-//
-//   }
-// }
+function firstSort(arr, begin, end) {
+  let left = begin,
+      right = end;
+
+  let mid = arr[Math.trunc((left+right) / 2)];
+
+  if (left >= right) return;
+
+  while (left < right) {
+    if (arr[left] >= mid) {
+      if (arr[right] <= mid) {
+        const cur = arr[left];
+        arr[left] = arr[right];
+        arr[right] = cur;
+
+        // ++left;
+        // --right;
+      } else {
+        --right;
+      }
+    } else {
+      ++left;
+    }
+  }
+
+  firstSort(arr, begin, right - 1);
+  firstSort(arr, right + 1, end);
+
+  return arr;
+}
 
 
+let arr = [5, 3, 7, 6, 4, 1, 0, 2, 9, 10, 8];
+console.log(firstSort(arr, 0, arr.length));
 
-// /**
-//  * @param {number[][]} intervals
-//  * @return {number[][]}
-//  */
-// var merge = function(intervals) {
-//   intervals.sort((a, b) => {
-//     return a[0] - b[0];
-//   })
-//
-//   console.log(intervals);
-// };
-//
-// merge([[1,3],[2,6],[15,18],[8,10]]);
+
 
