@@ -1,22 +1,7 @@
-setImmediate(() => {
-  console.log(1);
-  Promise.resolve().then(() => {
-    console.log(2);
-  });
-}, 0);
-new Promise((resolve) => {
-  console.log(3);
-  resolve();
-}).then(() => {
-  console.log(4);
-  setTimeout(() => {
-    console.log(6);
-  }, 0);
-}).then(() => {
-  console.log(7);
-});
-console.log(8);
+let result = 100 + true + 21.2 + null + undefined + "Tencent" + [] + null + 9 + false;
 
-process.nextTick(() => {
-  console.log(5)
-});
+
+console.log(result);
+
+let t = [] + 'a';
+console.log(t);

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    div {
+      width: 100px;
+      height: 100px;
+      background-color: red;
+      border-radius: 50px 10px 20px 0;
+    }
+  </style>
+</head>
+<body>
+<div>
+
+</div>
+
+
+
+
+
+<div class="shanxing shanxing1">
+  <div class="sx1"></div>
+  <div class="sx2"></div>
+</div>
+
+<div class="shanxing shanxing2">
+  <div class="sx1"></div>
+  <div class="sx2"></div>
+</div>
+
+<div class="shanxing shanxing3">
+  <div class="sx1"></div>
+  <div class="sx2"></div>
+</div>
+
+<div class="shanxing shanxing4">
+  <div class="sx1"></div>
+  <div class="sx2"></div>
+</div>
+
+<div class="shanxing shanxing5">
+  <div class="sx1"></div>
+  <div class="sx2"></div>
+</div>
+<style>
+  .shanxing{
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: 100px;
+    background-color: yellow;
+  }
+
+  .sx1{
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    transform: rotate(0deg);
+    clip: rect(0px,100px,200px,0px); /*这个clip属性用来绘制半圆，在clip的rect范围内的内容显示出来，使用clip属性，元素必须是absolute的 */
+    border-radius: 100px;
+    background-color: #f00;
+    /*-webkit-animation: an1 2s infinite linear; */
+  }
+
+  .sx2{
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    transform: rotate(0deg);
+    clip: rect(0px,100px,200px,0px);
+    border-radius: 100px;
+    background-color: #f00;
+    /*-webkit-animation: an2 2s infinite linear;*/
+  }
+
+  /*绘制一个60度扇形*/
+  .shanxing1 .sx1{transform: rotate(-30deg);}
+  .shanxing1 .sx2{transform: rotate(-150deg);}
+
+  /*绘制一个85度扇形*/
+  .shanxing2 .sx1{transform: rotate(-45deg);}
+  .shanxing2 .sx2{transform: rotate(-140deg);}
+
+  /*绘制一个向右扇形，90度扇形*/
+  .shanxing3 .sx1{transform: rotate(45deg);}
+  .shanxing3 .sx2{transform: rotate(-45deg);}
+
+  /*绘制一个颜色扇形 */
+  .shanxing4 .sx1{transform: rotate(45deg);background-color: #fff;}
+  .shanxing4 .sx2{transform: rotate(-45deg);background-color: #fff;}
+
+  /*绘制一个不同颜色半圆夹角 */
+  .shanxing5 .sx1{transform: rotate(45deg);background-color: #f00;}
+  .shanxing5 .sx2{transform: rotate(-45deg);background-color: #0f0;
+</style>
+
+
+
+
+
+<canvas width="500" height="500"></canvas>
+<script>
+  // const div = document.querySelector('div');
+  const canvas = document.querySelector('canvas');
+  let context = canvas.getContext('2d');
+
+  function useArc() {
+    // 使用arc方法，需要moveto
+    // 使用arc()绘制图形时，如果没有设置moveTo()，那么会从圆弧的开始的点作为起始点。如果设置了moveTo()，那么该点会连线到圆弧起始点。
+    context.beginPath();
+    context.moveTo(100, 100);
+    context.arc(100, 100, 80, 0, 2*Math.PI/8);
+    context.fill();
+    context.closePath();
+  }
+</script>
+</body>
+</html>
