@@ -82,7 +82,8 @@ var db = {
 
 
 // obj.myFun.bind(db, '成都','上海')();
-// obj.myFun.myBind(db, '成都','上海')();
+obj.myFun.myBind(db, '成都','上海')();
+obj.myFun.myBind(db, '成都','上海').call(obj);
 
 
 // obj.myFun.apply(db,['成都','上海']);
