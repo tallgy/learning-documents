@@ -59,7 +59,7 @@ npm i xxx --save-dev
     当在package.json中定义了scripts时,其中包含了webpack命令,那么使用的是局部webpack
 ```
 
-<img src="images/image-20210823205604230.png" alt="image-20210823205604230" style="zoom:33%;" />
+<img src="images/image-20210823205604230.png" alt="image-20210823205604230" style="zoom: 80%;" />
 
 ## webpack的起步
 
@@ -125,7 +125,7 @@ dependencies 是运行时的依赖包
 	要想在终端使用本地的，需要自己进入本地的webpack目录位置，然后再webpack
 ```
 
-<img src="images/image-20210824094731707.png" alt="image-20210824094731707" style="zoom:33%;" />
+<img src="images/image-20210824094731707.png" alt="image-20210824094731707" style="zoom: 80%;" />
 
 ## loader的使用
 

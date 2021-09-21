@@ -56,7 +56,7 @@ npm / yarn	npm是node的，但是早期并没有那么好用，所以谷歌和Fa
 
 ## es lint
 
-<img src="images/image-20210825102410412.png" alt="image-20210825102410412" style="zoom:33%;" />
+<img src="images/image-20210825102410412.png" alt="image-20210825102410412" style="zoom: 67%;" />
 
 ## runtime-compiler && runtime-only
 
@@ -550,7 +550,7 @@ const router = new VueRouter({
   ➢但是通常不会修改类的属性,会直接使用默认的router-link-active即可.
 ```
 
-<img src="images/image-20210826164133181.png" alt="image-20210826164133181" style="zoom:33%;" />
+<img src="images/image-20210826164133181.png" alt="image-20210826164133181" style="zoom: 67%;" />
 
 #### 补充
 
@@ -558,7 +558,7 @@ const router = new VueRouter({
 active-class 可以通过router的实例属性进行修改
 ```
 
-<img src="images/image-20210826164208934.png" alt="image-20210826164208934" style="zoom:50%;" />
+<img src="images/image-20210826164208934.png" alt="image-20210826164208934" style="zoom: 67%;" />
 
 ##### 路由代码跳转
 
